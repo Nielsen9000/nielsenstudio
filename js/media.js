@@ -34,3 +34,40 @@ function markMissing(img) {
   const figure = img.closest("[data-media]");
   if (figure) figure.setAttribute("data-missing", "");
 }
+
+/* ==========================================================================
+   Background loops (hero + intro)
+
+   The loops carry [autoplay muted loop], but browsers handle off-screen
+   autoplay inconsistently — below-the-fold videos (the intro) often never
+   start, leaving only the poster image visible. We also don't want to decode
+   video that isn't on screen. So: play each only while it's in view, pause it
+   when it leaves. Videos hidden by CSS (mobile / reduced-motion) have zero box,
+   so the observer never reports them visible and they neither load nor play.
+   ========================================================================== */
+export function initBackgroundVideos() {
+  const videos = document.querySelectorAll("video[data-bg-video]");
+  if (!videos.length) return;
+
+  if (!("IntersectionObserver" in window)) {
+    videos.forEach(safePlay); // best effort without an observer
+    return;
+  }
+
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) safePlay(entry.target);
+        else entry.target.pause();
+      });
+    },
+    { threshold: 0.1 }
+  );
+  videos.forEach((v) => io.observe(v));
+}
+
+function safePlay(video) {
+  video.muted = true; // required for programmatic play to be permitted
+  const played = video.play();
+  if (played && typeof played.catch === "function") played.catch(() => {});
+}

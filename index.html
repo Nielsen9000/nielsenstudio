@@ -94,6 +94,31 @@
         />
       </div>
 
+      <!-- Smoke loop behind the (transparent) 3D canvas. Poster + the canvas's
+           own fallback image cover the reduced-motion / mobile / no-WebGL paths,
+           where the video is hidden. A gentle overlay sits between video and
+           canvas so the object's orange rim stays clearest, smoke still visible. -->
+      <div class="hero__bg" aria-hidden="true">
+        <video
+          class="hero__bg-video"
+          data-bg-video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster="/assets/img/hero/hero-fallback.jpg"
+        >
+          <source src="/assets/video/hero-bg.webm" type="video/webm" />
+          <source src="/assets/video/hero-bg.mp4" type="video/mp4" />
+        </video>
+        <div class="hero__overlay"></div>
+      </div>
+
+      <!-- Fade the smoke into pure base colour at the bottom edge so the hero
+           melts into the Studio section below — no hard seam. -->
+      <div class="hero__fade-bottom" aria-hidden="true"></div>
+
       <div class="container container--wide">
         <div class="hero__content" data-hero-intro data-reveal-stagger>
           <p class="eyebrow" data-reveal>
@@ -119,22 +144,43 @@
     </section>
 
     <!-- ===== 2 · Intro / positioning ================================== -->
-    <!-- Two calm columns: a soft mood image (left ~45%) beside the copy
-         (right ~55%). The image fades on every edge into the background. -->
+    <!-- The copy (right-aligned on desktop) sits over a full-section background
+         loop, dimmed by a dark overlay so it always reads clearly. -->
     <section class="section intro" id="intro" aria-labelledby="intro-head">
+      <!-- Full-section background loop, behind the copy. On capable desktops the
+           muted video plays; reduced-motion and mobile fall back to the still
+           image (also the video's poster). A dark overlay keeps text legible. -->
+      <div class="intro__bg" aria-hidden="true">
+        <img
+          class="intro__bg-still"
+          src="/assets/img/intro-texture.jpg"
+          alt=""
+          width="1600"
+          height="900"
+          loading="lazy"
+          decoding="async"
+        />
+        <video
+          class="intro__bg-video"
+          data-bg-video
+          autoplay
+          muted
+          loop
+          playsinline
+          preload="none"
+          poster="/assets/img/intro-texture.jpg"
+        >
+          <source src="/assets/video/studio-bg.webm" type="video/webm" />
+          <source src="/assets/video/studio-bg.mp4" type="video/mp4" />
+        </video>
+        <div class="intro__overlay"></div>
+        <!-- Mirror of the hero's bottom fade: the Studio smoke starts from pure
+             base colour at the top edge, so the sections meet in shared dark. -->
+        <div class="intro__fade-top" aria-hidden="true"></div>
+      </div>
+
       <div class="container">
         <div class="intro__grid">
-          <figure class="intro__media" data-reveal>
-            <img
-              src="/assets/img/intro-texture.jpg"
-              alt=""
-              width="1600"
-              height="900"
-              loading="lazy"
-              decoding="async"
-            />
-          </figure>
-
           <div class="intro__text" data-reveal-stagger>
             <p class="eyebrow" data-reveal>
               <span class="eyebrow__index">02</span> / Studio

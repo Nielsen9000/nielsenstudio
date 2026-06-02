@@ -89,10 +89,90 @@ html:not(.is-ready) [data-reveal] {
 
 .hero {
   position: relative;
+  box-sizing: border-box;
   min-height: 100svh;
   display: grid;
   align-items: center;
+  /* Reserve room for the fixed header so the vertically-centred content never
+     tucks under it. With border-box + min-height, this padding lives INSIDE the
+     one viewport height — the whole hero (text + object) stays on one screen. */
+  padding-block: calc(var(--header-h) + var(--space-s)) var(--space-l);
   overflow: hidden;
+  isolation: isolate; /* keep the hero's layers (video → canvas) self-contained */
+}
+
+/* --- Smoke background loop ------------------------------------------------
+   Sits at the very bottom of the hero. The transparent 3D canvas renders the
+   object over it; reduced-motion / mobile / no-WebGL hide the video and the
+   canvas's static fallback image takes over (see .hero__fallback below). */
+.hero__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.hero__bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 50%; /* match the fallback framing */
+  /* No CSS filter: the brightness/contrast/saturation lift is baked into the
+     video file, so the browser doesn't run a filter pass on this full-bleed
+     video every frame (removes a per-frame cost during scroll). */
+}
+
+/* Overlay between the video and the canvas: a light, vignette-leaning wash so
+   the object's burnt-orange rim light stays the brightest thing on screen,
+   while the smoke clearly shows through. Kept gentle — the scrim (below) does
+   the heavy lifting for headline contrast on the left. */
+.hero__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(
+      120% 115% at 68% 45%,
+      transparent 0%,
+      rgba(13, 13, 15, 0.42) 100%
+    ),
+    linear-gradient(to bottom, rgba(13, 13, 15, 0), rgba(13, 13, 15, 0.22));
+}
+
+/* Bottom fade-to-dark — the smoke resolves to pure base colour at the hero's
+   lower edge so it blends seamlessly into the Studio section. Above the video,
+   below the canvas object and the text. */
+.hero__fade-bottom {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 180px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+}
+
+/* Reduced motion: no autoplay — fall back to the static hero image. */
+@media (prefers-reduced-motion: reduce) {
+  .hero__bg-video {
+    display: none;
+  }
+}
+
+/* Mobile: skip the video (performance + data); the static hero image carries
+   the section. The 3D canvas already no-ops here (see hero3d.js). */
+@media (max-width: 48rem) {
+  .hero__bg-video {
+    display: none;
+  }
+}
+
+/* No live canvas (no-WebGL on desktop, etc.): the static fallback image fills
+   the hero, so the video behind it is just wasted bytes — drop it. */
+.hero__canvas[data-fallback] ~ .hero__bg .hero__bg-video {
+  display: none;
 }
 
 /* Three.js canvas mounts here, behind the content, full-bleed.
@@ -101,7 +181,7 @@ html:not(.is-ready) [data-reveal] {
 .hero__canvas {
   position: absolute;
   inset: 0;
-  z-index: var(--z-base);
+  z-index: 3; /* above the smoke video (0), overlay (1) and scrim (2) */
   /* The injected <canvas> and the fallback <img> both fill this box.         */
 }
 
@@ -117,7 +197,7 @@ html:not(.is-ready) [data-reveal] {
   content: "";
   position: absolute;
   inset: 0;
-  z-index: var(--z-base);
+  z-index: 2; /* over the smoke/overlay for headline contrast, under the canvas */
   pointer-events: none;
   background: linear-gradient(
     100deg,
@@ -153,13 +233,15 @@ html:not(.is-ready) [data-reveal] {
   /* Anti-center bias: content sits left, asymmetric. Width is wide enough to
      fit the largest headline word at the display step's max — measured in rem
      (not ch) so it doesn't shrink with body type. Caps at viewport on phones. */
-  max-width: min(92vw, 32rem);
-  padding-block: var(--space-2xl);
+  max-width: min(92vw, 33rem);
+  /* No vertical padding — the hero grid centres this block, and its own padding
+     reserves the header space. Extra padding here only risked overflow. */
+  padding-block: 0;
 }
 
 .hero__title {
-  font-size: var(--step-5);
-  margin-block: var(--space-s) var(--space-m);
+  font-size: var(--step-4); /* a touch smaller so the whole block fits one screen */
+  margin-block: var(--space-xs) var(--space-s);
   /* Words are never split. Override reset.css's break-word on headings: each
      word stays whole and lines break only between words. The column above is
      sized so even "collateral" at the max font fits on one line. */
@@ -219,6 +301,10 @@ html:not(.is-ready) [data-reveal] {
    ========================================================================== */
 
 .intro.section {
+  position: relative;
+  isolation: isolate; /* contain the background layers below the copy */
+  /* No overflow:hidden — the parallax it clipped is gone, and clipping here was
+     cropping the bottom of the facts grid. The bg layers are inset:0 anyway. */
   padding-block: var(--space-2xl);
 }
 
@@ -291,23 +377,85 @@ html:not(.is-ready) [data-reveal] {
   max-width: 42ch;
 }
 
-/* --- The mood image ------------------------------------------------------
-   overflow:hidden clips the parallax over-scan to the box; the masks then
-   dissolve every edge so the clip itself is never visible. */
-.intro__media {
-  position: relative;
-  margin: 0;
-  width: 100%;
-  aspect-ratio: 4 / 3;
+/* --- Full-section background loop -----------------------------------------
+   A muted, looping studio video covers the whole section behind the copy.
+   The still (intro-texture.jpg) is the poster + the fallback shown under
+   reduced-motion and on mobile; a dark overlay guarantees text legibility. */
+.intro__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   overflow: hidden;
 }
 
-.intro__media img {
+.intro__bg-still,
+.intro__bg-video {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* The texture is shot dark; lift and warm it so it reads as a rich material. */
-  filter: brightness(1.42) contrast(1.06) saturate(1.12);
+}
+
+/* Still sits underneath (gentle lift); the video layers over it once it plays.
+   The footage is very dark, so the video gets a stronger lift to actually read. */
+.intro__bg-still {
+  z-index: 0;
+  filter: brightness(1.12) contrast(1.03) saturate(1.06);
+}
+
+.intro__bg-video {
+  z-index: 1;
+  filter: brightness(1.5) contrast(1.05) saturate(1.1);
+}
+
+/* Overlay between background and copy — light enough that the smoke clearly
+   shows, a little firmer on the right where the text sits (the copy also has
+   its own dark backing on desktop, so the overlay can stay gentle). */
+.intro__overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+      to left,
+      rgba(13, 13, 15, 0.62) 0%,
+      rgba(13, 13, 15, 0.28) 50%,
+      rgba(13, 13, 15, 0.32) 100%
+    ),
+    linear-gradient(to bottom, rgba(13, 13, 15, 0.18), rgba(13, 13, 15, 0.34));
+}
+
+/* Top fade-to-dark — mirror of the hero's bottom fade. The Studio smoke starts
+   from pure base colour at the top edge, so the two sections meet in a shared
+   dark zone. Sits above the video + overlay (inside .intro__bg), below the copy. */
+.intro__fade-top {
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 180px;
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(to bottom, var(--bg), transparent);
+}
+
+/* Keep the copy above all background layers. */
+.intro .container {
+  position: relative;
+  z-index: 1;
+}
+
+/* Reduced motion: never autoplay — leave the calm still in place. */
+@media (prefers-reduced-motion: reduce) {
+  .intro__bg-video {
+    display: none;
+  }
+}
+
+/* Mobile: skip the video (performance + data) and show the still instead. */
+@media (max-width: 47.99rem) {
+  .intro__bg-video {
+    display: none;
+  }
 }
 
 /* Desktop: editorial layering. The image is a large layer on the left whose
@@ -315,7 +463,7 @@ html:not(.is-ready) [data-reveal] {
    backing so it stays razor-sharp. Section stays locked to one screen. */
 @media (min-width: 48rem) {
   .intro.section {
-    min-height: 100dvh;
+    min-height: 80dvh; /* trimmed — less empty air above and below */
     display: grid;
     align-items: center;
     padding-block: var(--space-l);
@@ -331,22 +479,37 @@ html:not(.is-ready) [data-reveal] {
 
   .intro__text {
     position: relative;
-    z-index: 2; /* above the image */
-    justify-self: end; /* right side */
-    max-width: 40ch;
+    z-index: 2; /* above the background layers */
+    justify-self: center; /* centred block — the smoke frames it on both sides */
+    max-width: 760px; /* wider so the copy fills the section, not floats in it */
     gap: var(--space-xs);
+    text-align: left;
   }
 
   .intro__statement {
-    font-size: 1.85rem;
+    font-size: 1.95rem;
+    max-width: 680px; /* fuller headline, still comfortable line lengths */
   }
 
   .intro__support {
     font-size: var(--step-0);
+    max-width: 64ch;
+  }
+
+  /* Facts as three even columns in one balanced row (was 2 + 1 orphan). */
+  .intro__facts {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    column-gap: var(--space-m);
+    margin-top: var(--space-s);
   }
 
   .intro__fact {
     padding-block: var(--space-2xs);
+  }
+
+  .intro__fact:last-child {
+    border-bottom: 0; /* grid uses only the top hairlines to structure cells */
   }
 
   /* Readability backing — a dark panel tied to the copy. Fully opaque behind
@@ -356,74 +519,30 @@ html:not(.is-ready) [data-reveal] {
   .intro__text::before {
     content: "";
     position: absolute;
-    inset: -1.6rem -2.5rem -1.6rem -7rem;
+    inset: -1.6rem -2.2rem;
     z-index: -1;
-    background: linear-gradient(
-      to right,
-      transparent 0%,
-      rgba(13, 13, 15, 0.86) 20%,
-      var(--bg) 40%
+    background: radial-gradient(
+      120% 120% at 50% 50%,
+      rgba(13, 13, 15, 0.74) 0%,
+      rgba(13, 13, 15, 0.45) 55%,
+      transparent 100%
     );
   }
 
-  /* The image layer: a WIDE 16:9 fill of the whole left side. It runs nearly
-     the full width at full height (so the landscape image shows large and
-     horizontal), with its right edge tucking under the copy's dark backing.
-     Edges stay softly faded; the left fade is gentle so it reads as filled. */
-  .intro__media {
-    position: absolute;
-    inset-block: 0;
-    inset-inline-start: 0;
-    width: 88%;
-    z-index: 1;
-    margin: 0;
-    aspect-ratio: auto;
-    -webkit-mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        #000 7%,
-        #000 100%
-      ),
-      linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 12%,
-        #000 88%,
-        transparent 100%
-      );
-    -webkit-mask-composite: source-in;
-    mask-image: linear-gradient(
-        to right,
-        transparent 0%,
-        #000 7%,
-        #000 100%
-      ),
-      linear-gradient(
-        to bottom,
-        transparent 0%,
-        #000 12%,
-        #000 88%,
-        transparent 100%
-      );
-    mask-composite: intersect;
-  }
-
-  .intro__media img {
-    object-position: 50% 50%;
-  }
-
-  /* A whisper of the hero's burnt-orange light, on the visible (left) part. */
-  .intro__media::after {
+  /* A whisper of the hero's burnt-orange light over the background. A plain
+     low-opacity radial (NO mix-blend-mode) — blending against the always-
+     changing video forced a full-screen recomposite every frame, which is what
+     made section 2 jank. This composites normally and stays cheap. */
+  .intro__overlay::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
     background: radial-gradient(
       48% 55% at 30% 42%,
-      rgba(200, 100, 60, 0.18),
+      rgba(200, 100, 60, 0.12),
       transparent 62%
     );
-    mix-blend-mode: screen;
   }
 }
 

@@ -8,3 +8,7 @@
 Thumbs.db
 .idea/
 .vscode/
+
+# Raw video sources (kept locally; the optimized loops live in assets/video/)
+/hero-bg.mp4
+/studio-bg.mp4

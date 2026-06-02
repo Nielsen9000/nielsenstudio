@@ -9,7 +9,7 @@ import { initAnimations } from "./animations.js";
 import { initHero3D } from "./hero3d.js";
 import { initMagnetic } from "./magnetic.js";
 import { initContact } from "./contact.js";
-import { initMediaFallback } from "./media.js";
+import { initMediaFallback, initBackgroundVideos } from "./media.js";
 
 /* Single source of truth for "may we animate?".
    Read live so a user toggling the OS setting is respected on next load.     */
@@ -30,6 +30,7 @@ function boot() {
   /* Each init is defensive: it no-ops if its target isn't on the page or if
      its dependency (GSAP / Three.js) failed to load from the CDN.            */
   initMediaFallback(); // independent of motion — always run
+  initBackgroundVideos(); // play hero/intro loops when they scroll into view
   initAnimations({ reducedMotion: prefersReducedMotion });
   initHero3D({ reducedMotion: prefersReducedMotion });
   initMagnetic({ reducedMotion: prefersReducedMotion });

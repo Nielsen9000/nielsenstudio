@@ -77,8 +77,11 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   const COLOR_FILL = new THREE.Color(read(css, "--text", "#f4f2ec"));
 
   const sizes = { width: mount.clientWidth, height: mount.clientHeight };
-  // Cap DPR: retina is sharp at 2; higher just burns GPU on the hero loop.
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  // Cap DPR low: the hero canvas is full-bleed, so every device pixel is shaded
+  // with the PBR material EVERY frame. 1.5 stays crisp with antialias on and
+  // roughly halves the fragment load vs 2 on retina — the main lag fix.
+  const MAX_DPR = 1.5;
+  const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
 
   // --- Renderer ----------------------------------------------------------
   const renderer = new THREE.WebGLRenderer({
@@ -88,6 +91,9 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   });
   renderer.setSize(sizes.width, sizes.height);
   renderer.setPixelRatio(dpr);
+  // Explicitly clear to fully transparent so the smoke video behind the canvas
+  // shows through everywhere the object isn't drawn (don't rely on the default).
+  renderer.setClearColor(0x000000, 0);
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
   renderer.toneMappingExposure = 1.3;
   mount.appendChild(renderer.domElement);
@@ -120,11 +126,23 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   // centre, undistorted, and never swings off-screen (the orbit is centred on
   // the object, not on screen centre). SUBJECT_OFFSET widens the virtual frame.
   const SUBJECT_OFFSET = 0.30; // 0 = centred · larger = further right
+  // Drop the subject a touch below centre so its top clears the fixed header and
+  // it sits more in the middle of the hero. Pure framing (negative vertical view
+  // offset) — it shifts where the object lands without changing its size or the
+  // orbit pivot, so drag-to-rotate still feels natural.
+  const SUBJECT_DROP = 0.06; // fraction of canvas height to lower the subject
   function frameCamera() {
     const fullW = sizes.width * (1 + SUBJECT_OFFSET);
     const fullH = sizes.height;
     camera.aspect = fullW / fullH; // base frustum matches the wide virtual frame
-    camera.setViewOffset(fullW, fullH, 0, 0, sizes.width, sizes.height);
+    camera.setViewOffset(
+      fullW,
+      fullH,
+      0,
+      -sizes.height * SUBJECT_DROP,
+      sizes.width,
+      sizes.height
+    );
     camera.updateProjectionMatrix();
   }
   frameCamera();
@@ -133,7 +151,7 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   // Torus knot reads as a crafted object without a model load. Dark metal, but
   // a lighter base + slightly higher roughness than pure chrome so the studio
   // environment paints visible form across the body, not just edge glints.
-  const geometry = new THREE.TorusKnotGeometry(1.1, 0.36, 220, 32);
+  const geometry = new THREE.TorusKnotGeometry(1.1, 0.36, 160, 24);
   const material = new THREE.MeshStandardMaterial({
     color: new THREE.Color("#2a2a31"),
     metalness: 0.85,
@@ -141,6 +159,7 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
     envMapIntensity: 1.1, // let the RoomEnvironment reflections carry the form
   });
   const mesh = new THREE.Mesh(geometry, material);
+  mesh.scale.setScalar(0.79); // a touch more presence, still fully inside the hero
   scene.add(mesh);
 
   // --- Lighting ----------------------------------------------------------
@@ -199,16 +218,21 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
     sizes.width = mount.clientWidth;
     sizes.height = mount.clientHeight;
     renderer.setSize(sizes.width, sizes.height);
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, MAX_DPR));
     frameCamera(); // re-apply the right-of-centre framing at the new size
   }
   window.addEventListener("resize", onResize);
 
-  // --- Loop (paused when off-screen / tab hidden) ------------------------
+  // --- Loop (paused only when off-screen / tab hidden) -------------------
+  // Renders continuously while the hero is in view so the object keeps spinning
+  // at all times, including during scroll. (Kept cheap via the capped DPR and
+  // trimmed geometry above.)
   let rafId = 0;
   let running = false;
 
   function tick() {
+    rafId = requestAnimationFrame(tick);
+
     // Idle self-spin — continuous, in place, paused only during a drag.
     if (!userInteracting) mesh.rotation.y += 0.004;
 
@@ -221,7 +245,6 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
 
     controls.update();
     renderer.render(scene, camera);
-    rafId = requestAnimationFrame(tick);
   }
 
   function play() {

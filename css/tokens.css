@@ -66,6 +66,7 @@
   --space-3xl: clamp(6.00rem, 4.80rem + 6.00vw, 11.25rem); /* section gaps   */
 
   /* --- Layout ------------------------------------------------------------ */
+  --header-h:       clamp(3.75rem, 3.2rem + 1.6vw, 4.75rem); /* fixed header height */
   --container:      72rem;  /* ~1152px max content width                     */
   --container-wide: 84rem;  /* wider band for hero / full-bleed work          */
   --gutter:         clamp(1.25rem, 0.80rem + 2.25vw, 2.50rem); /* page edges  */

@@ -30,39 +30,12 @@ export function initAnimations({ reducedMotion }) {
   }
 
   initHeroIntro(gsap);
-  initIntroParallax(gsap);
   revealOnScroll(gsap);
 }
 
-/**
- * Subtle scroll parallax on the intro backdrop image — gives it the same sense
- * of life the hero has. The image is over-scaled so it can drift vertically
- * without ever exposing an edge. Desktop only (where it's a full backdrop).
- */
-function initIntroParallax(gsap) {
-  if (!window.ScrollTrigger) return;
-  if (!window.matchMedia("(min-width: 48rem)").matches) return;
-
-  const img = document.querySelector(".intro__media img");
-  const section = document.querySelector(".intro");
-  if (!img || !section) return;
-
-  gsap.fromTo(
-    img,
-    { yPercent: -7, scale: 1.16 },
-    {
-      yPercent: 7,
-      scale: 1.16,
-      ease: "none",
-      scrollTrigger: {
-        trigger: section,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true,
-      },
-    }
-  );
-}
+/* The intro background used to run a scrub-driven parallax, but the smoke video
+   already supplies the motion. Transforming that filtered, always-playing video
+   layer on every scroll frame just cost frames for no real gain, so it's gone. */
 
 /**
  * The hero intro — plays on load, above the fold. This is where the signature
