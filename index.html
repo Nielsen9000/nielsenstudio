@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>Nielsen Studio — Web design & brand collateral that convert</title>
+  <meta
+    name="description"
+    content="Nielsen Studio is a freelance web design studio by Simon Nielsen in Aalborg, Denmark — building sites and brand collateral (PDFs, decks) that convert."
+  />
+
+  <!-- Open Graph / social -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Nielsen Studio" />
+  <meta
+    property="og:description"
+    content="Web design & brand collateral that convert. Aalborg, Denmark."
+  />
+  <meta property="og:url" content="https://nielsens.studio/" />
+  <meta property="og:image" content="/assets/img/og/og-default.png" />
+  <meta name="theme-color" content="#0d0d0f" />
+
+  <!-- Favicons (files dropped into /assets/favicon — see assets/ASSETS.md) -->
+  <link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/favicon/favicon.ico" sizes="any" />
+  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png" />
+
+  <!-- Self-hosted fonts: preload the two we paint immediately (no FOIT flash).
+       woff2 only; see /fonts/FONTS.md. -->
+  <link
+    rel="preload"
+    href="/fonts/Fraunces-Variable.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
+  <link
+    rel="preload"
+    href="/fonts/Inter-Variable.woff2"
+    as="font"
+    type="font/woff2"
+    crossorigin
+  />
+
+  <!-- Styles: reset → tokens → base → sections (cascade order matters). -->
+  <link rel="stylesheet" href="/css/reset.css" />
+  <link rel="stylesheet" href="/css/tokens.css" />
+  <link rel="stylesheet" href="/css/base.css" />
+  <link rel="stylesheet" href="/css/sections.css" />
+
+  <!-- Flip no-js → js as early as possible so CSS can branch cleanly. -->
+  <script>
+    document.documentElement.classList.remove("no-js");
+    document.documentElement.classList.add("js");
+  </script>
+</head>
+
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <!-- Fixed, inert texture layer. Noise asset wired in later (see ASSETS.md). -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="site-header">
+    <a class="site-header__brand" href="#top" aria-label="Nielsen Studio — home">
+      Nielsen Studio
+    </a>
+    <nav class="site-nav" aria-label="Primary">
+      <a class="site-nav__link" href="#work">Work</a>
+      <a class="site-nav__link" href="#services">Services</a>
+      <a class="site-nav__link" href="#about">About</a>
+      <a class="btn btn--ghost" href="#contact" data-magnetic>Contact</a>
+    </nav>
+  </header>
+
+  <main id="main">
+    <span id="top"></span>
+
+    <!-- ===== 1 · Hero =================================================== -->
+    <!-- 3D material mounts in .hero__canvas; content overlays, left-aligned.
+         JS appends a <canvas> here on capable devices. On mobile / reduced
+         motion / no-WebGL it sets [data-fallback] and the static image shows. -->
+    <section class="hero" aria-label="Introduction">
+      <div class="hero__canvas" data-hero-canvas aria-hidden="true">
+        <img
+          class="hero__fallback"
+          src="/assets/img/hero/hero-fallback.jpg"
+          alt=""
+          width="1600"
+          height="1200"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+
+      <div class="container container--wide">
+        <div class="hero__content" data-hero-intro data-reveal-stagger>
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow__index">01</span> / Nielsen Studio
+          </p>
+          <h1 class="hero__title" data-reveal>
+            <!-- One-liner finalised in the hero build step. -->
+            Websites &amp; brand collateral, built to
+            <span class="accent">convert.</span>
+          </h1>
+          <p class="lead" data-reveal>
+            Freelance web design from Aalborg, Denmark — sites, PDFs and decks
+            that work as one system.
+          </p>
+        </div>
+      </div>
+
+      <!-- Affordance: only meaningful when the live canvas is interactive.
+           Hidden by CSS in the fallback state. -->
+      <p class="hero__hint" data-reveal aria-hidden="true">
+        <span class="hero__hint-dot"></span> Drag to rotate
+      </p>
+    </section>
+
+    <!-- ===== 2 · Intro / positioning ================================== -->
+    <!-- Two calm columns: a soft mood image (left ~45%) beside the copy
+         (right ~55%). The image fades on every edge into the background. -->
+    <section class="section intro" id="intro" aria-labelledby="intro-head">
+      <div class="container">
+        <div class="intro__grid">
+          <figure class="intro__media" data-reveal>
+            <img
+              src="/assets/img/intro-texture.jpg"
+              alt=""
+              width="1600"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          <div class="intro__text" data-reveal-stagger>
+            <p class="eyebrow" data-reveal>
+              <span class="eyebrow__index">02</span> / Studio
+            </p>
+            <h2 id="intro-head" class="intro__statement" data-reveal>
+              I design and build websites — and the
+              <span class="intro__accent">brand collateral</span> around them.
+              One studio for your site, your company PDF and your pitch deck,
+              so it all speaks in the same voice.
+            </h2>
+            <p class="intro__support" data-reveal>
+              Built for small businesses and founders who want work that looks
+              considered and actually converts — not a template with a logo on
+              top.
+            </p>
+            <dl class="intro__facts" data-reveal>
+              <div class="intro__fact">
+                <dt>Based in</dt>
+                <dd>Aalborg, Denmark — clients anywhere.</dd>
+              </div>
+              <div class="intro__fact">
+                <dt>What I make</dt>
+                <dd>Websites, plus documents &amp; decks (PDF, PowerPoint).</dd>
+              </div>
+              <div class="intro__fact">
+                <dt>Built with</dt>
+                <dd>HTML, CSS, JavaScript &amp; GSAP. No templates.</dd>
+              </div>
+            </dl>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 3 · Selected work ======================================== -->
+    <!-- Primary: NAS — the one project that shows BOTH web and documents/decks,
+         which is exactly why it leads. Second: Royal Nectar Ventures (smaller). -->
+    <section class="section work" id="work" aria-labelledby="work-head">
+      <div class="container">
+        <div class="section-head" data-reveal-stagger>
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow__index">03</span> / Work
+          </p>
+          <h2 id="work-head" data-reveal>Selected <span class="accent">work.</span></h2>
+          <p class="section-lead" data-reveal>
+            Recent client work — built as complete systems, screen to print.
+          </p>
+        </div>
+      </div>
+
+      <!-- ---- NAS · primary case --------------------------------------- -->
+      <article class="case case--primary" aria-labelledby="case-nas-title">
+        <div class="container">
+          <header class="case__head" data-reveal-stagger>
+            <p class="eyebrow" data-reveal>
+              <span class="eyebrow__index">Case 01</span> / Primary
+            </p>
+            <h3 id="case-nas-title" class="case__title" data-reveal>NAS</h3>
+            <p class="case__summary" data-reveal>
+              NAS had to look established on every surface a client sees. I built
+              it as one system across screen and print — the
+              <strong>website</strong>, the
+              <strong>Company Profile PDF</strong> and the
+              <strong>pitch deck</strong> — same type, same restraint, same voice,
+              so it reads like one studio made all of it.
+            </p>
+            <ul class="case__scope" role="list" data-reveal>
+              <li>Website</li>
+              <li class="case__scope-doc">Company Profile PDF</li>
+              <li class="case__scope-doc">Pitch deck</li>
+            </ul>
+          </header>
+
+          <!-- Cover -->
+          <figure
+            class="media media--wide case__cover"
+            data-media
+            data-label="nas-cover.jpg — asset pending"
+            data-reveal
+          >
+            <img
+              data-fallback-img
+              src="/assets/img/work/nas-cover.jpg"
+              alt="The NAS pitch-deck title slide — a drone against a storm sky."
+              width="1600"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          <!-- Part 1 · Web (zig: media left, text right) -->
+          <div class="case__row" data-reveal-stagger>
+            <div class="case__media-col case__media-col--stack" data-reveal>
+              <!-- Live site hero in the discreet CSS browser frame. -->
+              <div class="browser">
+                <div class="browser__bar" aria-hidden="true">
+                  <span class="browser__dot"></span>
+                  <span class="browser__dot"></span>
+                  <span class="browser__dot"></span>
+                  <span class="browser__url">nas — homepage</span>
+                </div>
+                <figure
+                  class="browser__viewport media"
+                  data-media
+                  data-label="nas-hero.jpg — asset pending"
+                >
+                  <img
+                    data-fallback-img
+                    src="/assets/img/work/nas-hero.jpg"
+                    alt="The NAS website hero."
+                    width="1600"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              </div>
+              <!-- The design blueprint behind the build, shown flat as a detail. -->
+              <figure
+                class="media media--wide"
+                data-media
+                data-label="nas-site.jpg — asset pending"
+              >
+                <img
+                  data-fallback-img
+                  src="/assets/img/work/nas-site.jpg"
+                  alt="The NAS site design blueprint."
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            </div>
+            <div class="case__text-col" data-reveal>
+              <p class="case__part-label">The website</p>
+              <p>
+                A fast, hand-built site — no page builder — that positions NAS
+                and routes visitors straight to contact. Written in the same
+                vanilla HTML, CSS and JavaScript this studio runs on.
+              </p>
+              <dl class="facts case__facts">
+                <div class="fact">
+                  <dt>Stack</dt>
+                  <dd>Vanilla HTML, CSS, JS &amp; GSAP</dd>
+                </div>
+                <div class="fact">
+                  <dt>Scope</dt>
+                  <dd>Multi-page site, hosted on Vercel</dd>
+                </div>
+                <div class="fact">
+                  <dt>Focus</dt>
+                  <dd>Positioning &amp; routing to contact</dd>
+                </div>
+              </dl>
+              <a
+                class="case__live-link"
+                href="https://nordicadvancedsystems.com"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View live site <span aria-hidden="true">→</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Part 2 · Documents — text block above, two docs side by side -->
+          <div class="case__documents" data-reveal-stagger>
+            <div class="case__doc-head" data-reveal>
+              <p class="case__part-label">Documents</p>
+              <h4 class="case__doc-title">The same system, in print.</h4>
+              <p>
+                A Company Profile and a technical datasheet that look like they
+                came from the same place as the site — because they did. This
+                pairing of web and print is the work I do that most studios don't.
+              </p>
+            </div>
+
+            <div class="case__doc-grid" data-reveal>
+              <figure
+                class="media media--wide case__doc-item"
+                data-media
+                data-label="nas-deck.jpg — Company Profile cover"
+              >
+                <img
+                  data-fallback-img
+                  src="/assets/img/work/nas-deck.jpg"
+                  alt="The NAS Company Profile cover."
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+              <figure
+                class="media media--wide case__doc-item"
+                data-media
+                data-label="nas-pdf.jpg — technical datasheet"
+              >
+                <img
+                  data-fallback-img
+                  src="/assets/img/work/nas-pdf.jpg"
+                  alt="A NAS technical datasheet."
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <!-- ---- Royal Nectar Ventures · secondary case ------------------- -->
+      <article class="case case--secondary" aria-labelledby="case-rnv-title">
+        <div class="container">
+          <div class="case__row" data-reveal-stagger>
+            <div class="case__media-col" data-reveal>
+              <figure
+                class="media media--wide"
+                data-media
+                data-label="royal-nectar-cover.jpg — asset pending"
+              >
+                <img
+                  data-fallback-img
+                  src="/assets/img/work/royal-nectar-cover.jpg"
+                  alt="The Royal Nectar Ventures brand and website."
+                  width="1600"
+                  height="900"
+                  loading="lazy"
+                  decoding="async"
+                />
+              </figure>
+            </div>
+            <div class="case__text-col" data-reveal>
+              <p class="eyebrow">
+                <span class="eyebrow__index">Case 02</span> / Secondary
+              </p>
+              <h3 id="case-rnv-title" class="case__title case__title--sm">
+                Royal Nectar Ventures
+              </h3>
+              <p class="case__summary">
+                A Ghanaian drinks importer with a bold, high-energy brand.
+                Brand-led design and a vibrant, commerce-leaning site — hand-built
+                in vanilla HTML, CSS, JavaScript and GSAP.
+              </p>
+              <ul class="case__scope" role="list">
+                <li>Brand</li>
+                <li>Website</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <!-- ===== 4 · Services ============================================= -->
+    <section class="section" id="services" aria-labelledby="services-head">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><span class="eyebrow__index">04</span> / Services</p>
+          <h2 id="services-head" data-reveal>Web design &amp; <span class="accent">documents.</span></h2>
+        </div>
+        <!-- Dual-offering zig-zag built in the services step. -->
+      </div>
+    </section>
+
+    <!-- ===== 5 · About / process ===================================== -->
+    <section class="section" id="about" aria-labelledby="about-head">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><span class="eyebrow__index">05</span> / About</p>
+          <h2 id="about-head" data-reveal>About &amp; <span class="accent">process.</span></h2>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 6 · Contact CTA ========================================= -->
+    <section class="section" id="contact" aria-labelledby="contact-head">
+      <div class="container">
+        <div class="section-head">
+          <p class="eyebrow"><span class="eyebrow__index">06</span> / Contact</p>
+          <h2 id="contact-head" data-reveal>Start a <span class="accent">project.</span></h2>
+        </div>
+        <!-- Low-friction contact form built in the contact step. -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__inner">
+      <span class="site-footer__brand">Nielsen Studio</span>
+      <span class="site-footer__meta">
+        Aalborg, Denmark · <a href="mailto:hello@nielsens.studio">hello@nielsens.studio</a>
+      </span>
+    </div>
+  </footer>
+
+  <!-- ===== Scripts ===================================================
+       Libraries from CDN, pinned. Globals (window.gsap / THREE) so a CDN
+       failure degrades gracefully — module init() functions guard for it.
+       Order: classic defer libs → importmap → three loader → app entry. -->
+
+  <!-- GSAP + ScrollTrigger 3.12.5 (global window.gsap / ScrollTrigger) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+
+  <!-- Three.js 0.160.0 — resolved by this import map. hero3d.js dynamically
+       imports "three" / "three/addons/" on demand (only on capable devices),
+       so there's no separate loader and no script-order timing to get wrong. -->
+  <script type="importmap">
+    {
+      "imports": {
+        "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+      }
+    }
+  </script>
+
+  <!-- App entry -->
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>

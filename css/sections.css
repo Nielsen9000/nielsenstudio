@@ -1,0 +1,803 @@
+/* ==========================================================================
+   sections.css — Per-section layout
+   Trin 1 establishes the structural shell: header, hero frame, footer, and
+   the shared reveal mechanic. Section internals (work, services, about,
+   contact) are filled in their own build steps.
+   ========================================================================== */
+
+/* --- Signature reveal ----------------------------------------------------
+   ONE movement reused across the whole site: a weighty fade + short rise.
+   Default state set in CSS so content is hidden before GSAP boots (no flash);
+   JS adds .is-ready on <html> only when motion is allowed, then animates.
+   If JS/motion is unavailable, the fallback below keeps everything visible.  */
+
+[data-reveal] {
+  will-change: transform, opacity;
+}
+
+html.is-ready [data-reveal] {
+  opacity: 0;
+  transform: translateY(var(--reveal-y));
+}
+
+/* No-JS / reduced-motion safety net: never leave content invisible.         */
+html:not(.is-ready) [data-reveal] {
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
+   Site header
+   ========================================================================== */
+
+.site-header {
+  position: fixed;
+  inset-block-start: 0;
+  inset-inline: 0;
+  z-index: var(--z-header);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-m);
+  padding: var(--space-s) var(--gutter);
+  /* Subtle wash so the bar reads over the hero without a hard edge.          */
+  background: linear-gradient(
+    to bottom,
+    var(--bg) 0%,
+    rgba(13, 13, 15, 0.72) 60%,
+    rgba(13, 13, 15, 0) 100%
+  );
+}
+
+.site-header__brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  font-weight: var(--weight-semi);
+  letter-spacing: var(--tracking-tight);
+  color: var(--text);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--space-m);
+}
+
+.site-nav__link {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+  letter-spacing: 0.01em;
+}
+
+.site-nav__link:hover {
+  color: var(--text);
+}
+
+/* Collapse nav links on small screens; brand + CTA remain (menu added later).*/
+@media (max-width: 48rem) {
+  .site-nav {
+    gap: var(--space-s);
+  }
+  .site-nav__link {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Hero — frame only (3D canvas + content fill in their build steps)
+   ========================================================================== */
+
+.hero {
+  position: relative;
+  min-height: 100svh;
+  display: grid;
+  align-items: center;
+  overflow: hidden;
+}
+
+/* Three.js canvas mounts here, behind the content, full-bleed.
+   Pushed slightly right so the form sits in the darker left third — the rim-lit
+   material reads in the open space beside the text, not behind it.           */
+.hero__canvas {
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  /* The injected <canvas> and the fallback <img> both fill this box.         */
+}
+
+.hero__canvas > canvas {
+  display: block;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* Scrim: a soft left-to-right wash so headline contrast holds over the
+   brightest part of the render. Fixed layer, no animation, no input capture. */
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: var(--z-base);
+  pointer-events: none;
+  background: linear-gradient(
+    100deg,
+    var(--bg) 0%,
+    rgba(13, 13, 15, 0.78) 32%,
+    rgba(13, 13, 15, 0.30) 64%,
+    rgba(13, 13, 15, 0) 100%
+  );
+}
+
+/* Static fallback image — hidden until JS declares the fallback path.        */
+.hero__fallback {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 70% 50%;
+  opacity: 0;
+}
+
+.hero__canvas[data-fallback] .hero__fallback {
+  opacity: 1;
+}
+
+/* When the live canvas mounts, the fallback img is redundant — hide it so it
+   never peeks through the alpha canvas.                                      */
+.hero__canvas[data-ready] .hero__fallback {
+  display: none;
+}
+
+.hero__content {
+  position: relative;
+  z-index: var(--z-raised);
+  /* Anti-center bias: content sits left, asymmetric. Width is wide enough to
+     fit the largest headline word at the display step's max — measured in rem
+     (not ch) so it doesn't shrink with body type. Caps at viewport on phones. */
+  max-width: min(92vw, 32rem);
+  padding-block: var(--space-2xl);
+}
+
+.hero__title {
+  font-size: var(--step-5);
+  margin-block: var(--space-s) var(--space-m);
+  /* Words are never split. Override reset.css's break-word on headings: each
+     word stays whole and lines break only between words. The column above is
+     sized so even "collateral" at the max font fits on one line. */
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
+  text-wrap: balance;
+}
+
+/* Drag-to-rotate affordance, lower-right. Only meaningful with a live canvas;
+   hidden whenever the static fallback is in play.                           */
+.hero__hint {
+  position: absolute;
+  z-index: var(--z-raised);
+  inset-block-end: var(--space-l);
+  inset-inline-end: var(--gutter);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.hero__canvas[data-fallback] ~ .hero__hint {
+  display: none;
+}
+
+.hero__hint-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent);
+  /* Gentle pulse to draw the eye; disabled under reduced motion (reset.css). */
+  animation: hero-hint-pulse 2.4s var(--ease-in-out) infinite;
+}
+
+@keyframes hero-hint-pulse {
+  0%, 100% { opacity: 1;   transform: scale(1); }
+  50%      { opacity: 0.4; transform: scale(0.7); }
+}
+
+@media (max-width: 48rem) {
+  /* On phones the fallback image carries the hero; drop the hint entirely. */
+  .hero__hint {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Intro / positioning
+   Two calm columns: a soft mood image (left) beside the copy (right). The
+   image is a quiet atmospheric layer — masked to fade out on every edge so it
+   melts into the background with no hard rectangle anywhere.
+   ========================================================================== */
+
+.intro.section {
+  padding-block: var(--space-2xl);
+}
+
+/* Mobile-first: single column, image above the copy. */
+.intro__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-l);
+  align-items: center;
+}
+
+.intro__text {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  max-width: 46ch;
+}
+
+/* The positioning statement — editorial serif, not centered. */
+.intro__statement {
+  font-size: var(--step-2);
+  font-weight: var(--weight-regular);
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  max-width: 32ch;
+}
+
+/* The single accent moment in this section — one phrase, the differentiator. */
+.intro__accent {
+  color: var(--accent);
+}
+
+.intro__support {
+  font-size: var(--step-1);
+  line-height: var(--leading-normal);
+  color: var(--text);
+  max-width: 44ch;
+}
+
+/* Facts: label / value rows divided by hairlines. Mono labels for dev credibility. */
+.intro__facts {
+  display: flex;
+  flex-direction: column;
+  margin-top: var(--space-2xs);
+}
+
+.intro__fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  padding-block: var(--space-xs);
+  border-top: 1px solid var(--line);
+}
+
+.intro__fact:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.intro__fact dt {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.intro__fact dd {
+  font-size: var(--step-0);
+  color: var(--text);
+  max-width: 42ch;
+}
+
+/* --- The mood image ------------------------------------------------------
+   overflow:hidden clips the parallax over-scan to the box; the masks then
+   dissolve every edge so the clip itself is never visible. */
+.intro__media {
+  position: relative;
+  margin: 0;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+}
+
+.intro__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* The texture is shot dark; lift and warm it so it reads as a rich material. */
+  filter: brightness(1.42) contrast(1.06) saturate(1.12);
+}
+
+/* Desktop: editorial layering. The image is a large layer on the left whose
+   right edge slides UNDER the copy; the copy sits on top with a strong dark
+   backing so it stays razor-sharp. Section stays locked to one screen. */
+@media (min-width: 48rem) {
+  .intro.section {
+    min-height: 100dvh;
+    display: grid;
+    align-items: center;
+    padding-block: var(--space-l);
+  }
+
+  /* Single track — the image is absolute, the copy is placed on the right and
+     overlaps it. Relative so the image positions against this box. */
+  .intro__grid {
+    position: relative;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+
+  .intro__text {
+    position: relative;
+    z-index: 2; /* above the image */
+    justify-self: end; /* right side */
+    max-width: 40ch;
+    gap: var(--space-xs);
+  }
+
+  .intro__statement {
+    font-size: 1.85rem;
+  }
+
+  .intro__support {
+    font-size: var(--step-0);
+  }
+
+  .intro__fact {
+    padding-block: var(--space-2xs);
+  }
+
+  /* Readability backing — a dark panel tied to the copy. Fully opaque behind
+     the text (so it's always crisp), dissolving to the left into the image so
+     the two layers connect rather than collide. Sits above the image, below
+     the text glyphs. CRITICAL: this is what guarantees legibility on overlap. */
+  .intro__text::before {
+    content: "";
+    position: absolute;
+    inset: -1.6rem -2.5rem -1.6rem -7rem;
+    z-index: -1;
+    background: linear-gradient(
+      to right,
+      transparent 0%,
+      rgba(13, 13, 15, 0.86) 20%,
+      var(--bg) 40%
+    );
+  }
+
+  /* The image layer: a WIDE 16:9 fill of the whole left side. It runs nearly
+     the full width at full height (so the landscape image shows large and
+     horizontal), with its right edge tucking under the copy's dark backing.
+     Edges stay softly faded; the left fade is gentle so it reads as filled. */
+  .intro__media {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-start: 0;
+    width: 88%;
+    z-index: 1;
+    margin: 0;
+    aspect-ratio: auto;
+    -webkit-mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 7%,
+        #000 100%
+      ),
+      linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 12%,
+        #000 88%,
+        transparent 100%
+      );
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(
+        to right,
+        transparent 0%,
+        #000 7%,
+        #000 100%
+      ),
+      linear-gradient(
+        to bottom,
+        transparent 0%,
+        #000 12%,
+        #000 88%,
+        transparent 100%
+      );
+    mask-composite: intersect;
+  }
+
+  .intro__media img {
+    object-position: 50% 50%;
+  }
+
+  /* A whisper of the hero's burnt-orange light, on the visible (left) part. */
+  .intro__media::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(
+      48% 55% at 30% 42%,
+      rgba(200, 100, 60, 0.18),
+      transparent 62%
+    );
+    mix-blend-mode: screen;
+  }
+}
+
+/* ==========================================================================
+   Section heading block (shared by work / services / about)
+   ========================================================================== */
+
+.section-head {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+  max-width: 52ch;
+  margin-bottom: var(--space-xl);
+}
+
+/* Short context line under a section heading — muted, sits tight beneath it. */
+.section-lead {
+  font-size: var(--step-0);
+  color: var(--text-muted);
+  max-width: 48ch;
+  margin-top: calc(var(--space-2xs) * -1);
+}
+
+/* ==========================================================================
+   Selected work — cases
+   Asymmetric zig-zag, never a row of equal cards. The primary case (NAS) is
+   large and multi-part to show web + documents in one project; the secondary
+   case (Royal Nectar) is a single quieter row.
+   ========================================================================== */
+
+/* Tighten the vertical air markedly: much less empty space above the heading,
+   and a closer gap down to the first case. */
+.work.section {
+  padding-top: var(--space-l);
+}
+
+/* The work heading is the one centred block — a calm "now, the work" moment
+   that introduces the cases, rather than a left-aligned section label. */
+.work .section-head {
+  margin-inline: auto;
+  align-items: center;
+  text-align: center;
+  max-width: 54ch;
+  margin-bottom: var(--space-2xl);
+}
+
+/* Space between cases comes from rhythm, not boxes. */
+.case + .case {
+  margin-top: var(--space-3xl);
+}
+
+.case__head {
+  max-width: 60ch;
+  margin-bottom: var(--space-xl);
+}
+
+.case__title {
+  font-size: var(--step-4);
+  margin-block: var(--space-2xs) var(--space-s);
+}
+
+.case__title--sm {
+  font-size: var(--step-3);
+}
+
+.case__summary {
+  font-size: var(--step-1);
+  line-height: var(--leading-normal);
+  color: var(--text);
+  max-width: 54ch;
+}
+
+/* Scope tags — mono pills. The two document tags carry the single accent in
+   this section, signalling the differentiator (print, not just web). */
+.case__scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  list-style: none;
+  padding: 0;
+  margin-top: var(--space-m);
+}
+
+.case__scope li {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  padding: var(--space-3xs) var(--space-xs);
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+}
+
+.case__scope-doc {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+/* Reusable facts list — label / value rows with hairline dividers, the same
+   treatment used in the Studio section. */
+.facts {
+  display: flex;
+  flex-direction: column;
+}
+
+.fact {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+  padding-block: var(--space-xs);
+  border-top: 1px solid var(--line);
+}
+
+.fact:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.fact dt {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.fact dd {
+  font-size: var(--step-0);
+  color: var(--text);
+}
+
+/* Facts + live-site link filling out the case text column. */
+.case__facts {
+  margin-top: var(--space-m);
+  max-width: 36ch;
+}
+
+.case__live-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  align-self: flex-start;
+  margin-top: var(--space-m);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.case__live-link span {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.case__live-link:hover {
+  color: var(--accent-hover);
+}
+
+.case__live-link:hover span {
+  transform: translateX(4px);
+}
+
+/* Cover image — wide, sets up the case. */
+.case__cover {
+  margin-top: var(--space-l);
+}
+
+/* Zig-zag rows: image one side, text the other; alternate via --reverse. */
+.case__row {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-l);
+  margin-top: var(--space-2xl);
+}
+
+@media (min-width: 48rem) {
+  .case__row {
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  /* Reverse: text moves to the left, media to the right. */
+  .case__row--reverse .case__media-col {
+    order: 2;
+  }
+}
+
+.case__text-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.case__text-col p {
+  max-width: 46ch;
+  line-height: var(--leading-normal);
+}
+
+/* Mono label that names each part of the project (web vs print). The one
+   restrained accent on these labels reads as a wayfinding signal. */
+.case__part-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: var(--space-xs);
+}
+
+/* Document pair — two pages side by side within the media column. */
+.case__media-col--pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-s);
+}
+
+/* Stacked media — e.g. the browser frame above a flat blueprint detail. */
+.case__media-col--stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+/* Documents block — a text lead-in above, then the two documents side by side
+   across the full container width. No empty column, no dead space. */
+.case__documents {
+  margin-top: var(--space-2xl);
+}
+
+.case__doc-head {
+  max-width: 56ch;
+  margin-bottom: var(--space-xl);
+}
+
+.case__doc-title {
+  font-size: var(--step-2);
+  margin-bottom: var(--space-s);
+}
+
+.case__doc-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-l);
+}
+
+@media (min-width: 48rem) {
+  .case__doc-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Each document gets a thin frame; equal width + 16:9 means equal height.
+   The dark margin inside each frame is the source image's drop-shadow float,
+   not dead layout space. */
+.case__doc-item {
+  border: 1px solid var(--line-strong);
+}
+
+/* ==========================================================================
+   Media frame + placeholder
+   Real assets cover the box; until a file exists, [data-missing] shows a
+   labelled placeholder at the right aspect ratio (set by initMediaFallback).
+   ========================================================================== */
+
+.media {
+  position: relative;
+  overflow: hidden;
+  background-color: var(--surface);
+  border-radius: var(--radius);
+}
+
+.media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.media--wide {
+  aspect-ratio: 16 / 9;
+}
+
+/* Placeholder state: hide the (absent) image, show a dashed slot + filename. */
+.media[data-missing] {
+  border: 1px dashed var(--line-strong);
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 11px,
+    rgba(244, 242, 236, 0.025) 11px 12px
+  );
+}
+
+.media[data-missing] img {
+  display: none;
+}
+
+.media[data-missing]::after {
+  content: attr(data-label);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: var(--space-m);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+/* --- Discreet browser frame for site screenshots ------------------------- */
+
+.browser {
+  background-color: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.browser__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3xs);
+  padding: var(--space-2xs) var(--space-s);
+  border-bottom: 1px solid var(--line);
+}
+
+.browser__dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--line-strong);
+}
+
+.browser__url {
+  margin-left: var(--space-s);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* The viewport is also a .media (placeholder-capable) but the frame supplies
+   the corners, so drop its own radius. */
+.browser__viewport {
+  aspect-ratio: 16 / 9;
+  border-radius: 0;
+}
+
+/* ==========================================================================
+   Site footer
+   ========================================================================== */
+
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding-block: var(--space-xl);
+}
+
+.site-footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-m);
+}
+
+.site-footer__brand {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--text);
+}
+
+.site-footer__meta {
+  font-size: var(--step--1);
+  color: var(--text-muted);
+}

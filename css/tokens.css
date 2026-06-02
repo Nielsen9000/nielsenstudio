@@ -1,0 +1,92 @@
+/* ==========================================================================
+   tokens.css — Design system source of truth
+   Nielsen Studio · "Dark & burnt orange" (Direction 1)
+
+   Everything visual flows from here: color, type, spacing, motion.
+   Change a value here, and it propagates across the whole site.
+   ========================================================================== */
+
+:root {
+  /* --- Color -------------------------------------------------------------
+     Discipline: ONE accent. Orange is a signal, not wallpaper.
+     Never pure #000 or #fff — both backgrounds and text are warm.            */
+  --bg:          #0d0d0f; /* warm near-black page background                  */
+  --surface:     #1c1c20; /* elevated surfaces / cards (only when earned)     */
+  --accent:      #c8643c; /* burnt orange — CTAs, links, hover, 3D rim light  */
+  --text:        #f4f2ec; /* primary text (warm off-white)                    */
+  --text-muted:  #8a8780; /* secondary text, labels, section numbers          */
+
+  /* Derived accent shades — kept in the same warm family, low saturation.   */
+  --accent-hover: #d6764c; /* slightly lifted for hover/active                */
+  --accent-press: #b4542e; /* pressed/active darker step                      */
+  --accent-soft:  rgba(200, 100, 60, 0.12); /* faint orange wash             */
+
+  /* Hairline dividers — preferred over cards for hierarchy.                 */
+  --line:        rgba(244, 242, 236, 0.10);
+  --line-strong: rgba(244, 242, 236, 0.18);
+
+  /* --- Typography --------------------------------------------------------
+     Headings: Fraunces (editorial serif). Body/UI: Inter. Labels: mono.     */
+  --font-display: "Fraunces", Georgia, "Times New Roman", serif;
+  --font-body:    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-mono:    "JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+
+  /* Fluid type scale — clamp(min, preferred, max). Mobile-first.
+     Steps follow a ~1.25 (major third) ratio, loosened at the display end.   */
+  --step--1: clamp(0.83rem, 0.80rem + 0.15vw, 0.92rem); /* small labels      */
+  --step-0:  clamp(1.00rem, 0.96rem + 0.20vw, 1.13rem); /* body              */
+  --step-1:  clamp(1.25rem, 1.16rem + 0.45vw, 1.56rem); /* lead / large body */
+  --step-2:  clamp(1.56rem, 1.40rem + 0.80vw, 2.18rem); /* h3                */
+  --step-3:  clamp(1.95rem, 1.68rem + 1.35vw, 3.05rem); /* h2                */
+  --step-4:  clamp(2.44rem, 2.00rem + 2.20vw, 4.30rem); /* h1                */
+  --step-5:  clamp(2.75rem, 2.10rem + 3.10vw, 5.25rem); /* hero display      */
+
+  --leading-tight:   1.05; /* display headings                               */
+  --leading-snug:    1.20; /* sub-headings                                   */
+  --leading-normal:  1.55; /* body copy                                      */
+
+  --tracking-tight:  -0.02em; /* large display                               */
+  --tracking-label:   0.14em; /* uppercase mono labels                       */
+
+  --weight-light:   300;
+  --weight-regular: 400;
+  --weight-medium:  500;
+  --weight-semi:    600;
+
+  /* --- Spacing -----------------------------------------------------------
+     Fluid spacing scale shared by margins, gaps, and section rhythm.        */
+  --space-3xs: clamp(0.25rem, 0.24rem + 0.05vw, 0.31rem);
+  --space-2xs: clamp(0.50rem, 0.47rem + 0.15vw, 0.63rem);
+  --space-xs:  clamp(0.75rem, 0.71rem + 0.20vw, 0.94rem);
+  --space-s:   clamp(1.00rem, 0.94rem + 0.30vw, 1.25rem);
+  --space-m:   clamp(1.50rem, 1.40rem + 0.50vw, 1.88rem);
+  --space-l:   clamp(2.00rem, 1.80rem + 1.00vw, 2.81rem);
+  --space-xl:  clamp(3.00rem, 2.60rem + 2.00vw, 4.69rem);
+  --space-2xl: clamp(4.50rem, 3.80rem + 3.50vw, 7.50rem);
+  --space-3xl: clamp(6.00rem, 4.80rem + 6.00vw, 11.25rem); /* section gaps   */
+
+  /* --- Layout ------------------------------------------------------------ */
+  --container:      72rem;  /* ~1152px max content width                     */
+  --container-wide: 84rem;  /* wider band for hero / full-bleed work          */
+  --gutter:         clamp(1.25rem, 0.80rem + 2.25vw, 2.50rem); /* page edges  */
+  --radius:         4px;    /* restrained — sharp, editorial                  */
+  --radius-lg:      10px;
+
+  /* --- Motion ------------------------------------------------------------
+     Restrained and weighty. ONE signature feel reused everywhere.
+     GSAP reads these via getComputedStyle so JS and CSS stay in sync.        */
+  --ease-out:    cubic-bezier(0.16, 1, 0.30, 1);  /* ≈ power3.out            */
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-fast:    0.30s;
+  --dur-base:    0.60s;
+  --dur-slow:    0.90s;  /* signature reveal length (0.8–1.2s band)          */
+  --reveal-y:    24px;   /* default translate distance for reveals           */
+
+  /* --- Elevation & effects ----------------------------------------------- */
+  --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.40),
+                 0 8px 24px rgba(0, 0, 0, 0.30);
+  --z-base:    0;
+  --z-raised:  10;
+  --z-header:  100;
+  --z-overlay: 1000;
+}
