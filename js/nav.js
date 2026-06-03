@@ -26,11 +26,26 @@ export function initNav() {
     navLinks.forEach((l) => l.classList.toggle("is-active", l === link));
   }
 
+  // Track which linked sections are currently in the central band and recompute
+  // on every change. Marking active only on isIntersecting left the last link
+  // stuck lit after you scrolled back above it (up into the hero/Studio, which
+  // have no link). Instead: highlight the first linked section in the band, or
+  // clear everything when none is — so nothing is highlighted at the top.
+  const inBand = new Set();
   const observer = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
-        if (entry.isIntersecting) setActive(linkFor.get(entry.target.id));
+        if (entry.isIntersecting) inBand.add(entry.target.id);
+        else inBand.delete(entry.target.id);
       });
+      let current = null;
+      for (const [id, link] of linkFor) {
+        if (inBand.has(id)) {
+          current = link;
+          break;
+        }
+      }
+      setActive(current); // null clears all links
     },
     // Active = the section occupying the central ~10% band of the viewport.
     { rootMargin: "-45% 0px -45% 0px", threshold: 0 }

@@ -70,6 +70,7 @@
   --container:      72rem;  /* ~1152px max content width                     */
   --container-wide: 84rem;  /* wider band for hero / full-bleed work          */
   --gutter:         clamp(1.25rem, 0.80rem + 2.25vw, 2.50rem); /* page edges  */
+  --hero-indent:    clamp(var(--space-l), 6vw, 7rem); /* shared left edge: hero headline + header logo */
   --radius:         4px;    /* restrained — sharp, editorial                  */
   --radius-lg:      10px;
 

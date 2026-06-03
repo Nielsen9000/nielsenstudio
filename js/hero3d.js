@@ -77,9 +77,9 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   const COLOR_FILL = new THREE.Color(read(css, "--text", "#f4f2ec"));
 
   const sizes = { width: mount.clientWidth, height: mount.clientHeight };
-  // Cap DPR low: the hero canvas is full-bleed, so every device pixel is shaded
-  // with the PBR material EVERY frame. 1.5 stays crisp with antialias on and
-  // roughly halves the fragment load vs 2 on retina — the main lag fix.
+  // Cap DPR low: the hero canvas is large (the hero's right half), so every
+  // device pixel is shaded with the PBR material EVERY frame. 1.5 stays crisp
+  // with antialias on and roughly halves the fragment load vs 2 on retina.
   const MAX_DPR = 1.5;
   const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR);
 
@@ -120,17 +120,13 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   camera.position.set(0, 0, 6.4);
   scene.add(camera);
 
-  // Push the subject into the right of the canvas so the headline keeps clean
-  // dark space on the left. We render our canvas as the LEFT window of a wider
-  // virtual frame; the centred, in-place-spinning object then lands right-of-
-  // centre, undistorted, and never swings off-screen (the orbit is centred on
-  // the object, not on screen centre). SUBJECT_OFFSET widens the virtual frame.
-  const SUBJECT_OFFSET = 0.30; // 0 = centred · larger = further right
-  // Drop the subject a touch below centre so its top clears the fixed header and
-  // it sits more in the middle of the hero. Pure framing (negative vertical view
-  // offset) — it shifts where the object lands without changing its size or the
-  // orbit pivot, so drag-to-rotate still feels natural.
-  const SUBJECT_DROP = 0.06; // fraction of canvas height to lower the subject
+  // The canvas now occupies the hero's RIGHT HALF (see .hero__canvas in CSS),
+  // so the object just centres in its own canvas — no horizontal offset needed.
+  // (Kept as a knob: >0 would push it further right within the half.)
+  const SUBJECT_OFFSET = 0; // 0 = centred in the canvas · larger = further right
+  // Centred vertically so it lines up with the text block's vertical middle.
+  // (Knob kept: >0 would lower the subject within the canvas.)
+  const SUBJECT_DROP = 0.0; // fraction of canvas height to lower the subject
   function frameCamera() {
     const fullW = sizes.width * (1 + SUBJECT_OFFSET);
     const fullH = sizes.height;
@@ -159,7 +155,8 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
     envMapIntensity: 1.1, // let the RoomEnvironment reflections carry the form
   });
   const mesh = new THREE.Mesh(geometry, material);
-  mesh.scale.setScalar(0.79); // a touch more presence, still fully inside the hero
+  // Balanced in its half with calm space beside the text.
+  mesh.scale.setScalar(0.78);
   scene.add(mesh);
 
   // --- Lighting ----------------------------------------------------------
