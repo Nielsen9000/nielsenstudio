@@ -41,3 +41,47 @@ export function initNav() {
     if (section) observer.observe(section);
   });
 }
+
+/**
+ * Header scroll state: toggle .is-scrolled so the bar goes from invisible
+ * (clean over the hero) to a frosted-glass strip. We watch the hero itself with
+ * an IntersectionObserver — the header stays fully transparent for the whole
+ * hero, whatever its height, and only materializes once the hero has scrolled
+ * out of view. No per-frame scroll work; the observer fires only on crossing.
+ */
+export function initHeader() {
+  const header = document.querySelector(".site-header");
+  if (!header) return;
+
+  const hero = document.querySelector(".hero");
+
+  if (hero && "IntersectionObserver" in window) {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        header.classList.toggle("is-scrolled", !entry.isIntersecting);
+      },
+      { threshold: 0 }
+    );
+    observer.observe(hero); // fires immediately, so the initial state is correct
+    return;
+  }
+
+  // Fallback (no hero element or no IO support): a simple, rAF-coalesced
+  // scroll threshold that only ever toggles the class.
+  let ticking = false;
+  const update = () => {
+    header.classList.toggle("is-scrolled", window.scrollY > 40);
+    ticking = false;
+  };
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        ticking = true;
+        requestAnimationFrame(update);
+      }
+    },
+    { passive: true }
+  );
+  update();
+}

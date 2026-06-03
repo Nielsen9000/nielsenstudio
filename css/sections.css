@@ -40,16 +40,48 @@ html:not(.is-ready) [data-reveal] {
   justify-content: space-between;
   gap: var(--space-m);
   padding: var(--space-s) var(--gutter);
-  /* Subtle wash so the bar reads over the hero without a hard edge.          */
-  background: linear-gradient(
-    to bottom,
-    var(--bg) 0%,
-    rgba(13, 13, 15, 0.72) 60%,
-    rgba(13, 13, 15, 0) 100%
+  /* At the top the bar is invisible so the hero reads clean; once the page
+     scrolls it condenses into a glassy strip (.is-scrolled, toggled by JS). */
+  background: transparent;
+  border-bottom: 1px solid transparent;
+  transition: background 0.3s ease, backdrop-filter 0.3s ease,
+    border-color 0.3s ease;
+}
+
+/* Scrolled state: frosted-glass bar with a hairline, so the nav stays legible
+   once the dark content scrolls up behind it. */
+.site-header.is-scrolled {
+  background: rgba(13, 13, 15, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-bottom-color: var(--line);
+}
+
+/* Soft burnt-orange glow behind the brand, lit only in the glass state so it
+   never competes with a clean hero. It sits above the glass fill (no negative
+   z-index — that would hide it behind the 0.72 dark) and below the header
+   content, which is lifted to z-index 1. */
+.site-header::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at left center,
+    rgba(200, 100, 60, 0.08) 0%,
+    transparent 60%
   );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.site-header.is-scrolled::before {
+  opacity: 1;
 }
 
 .site-header__brand {
+  position: relative;
+  z-index: 1; /* above the glow */
   font-family: var(--font-display);
   font-size: var(--step-1);
   font-weight: var(--weight-semi);
@@ -58,25 +90,103 @@ html:not(.is-ready) [data-reveal] {
 }
 
 .site-nav {
+  position: relative;
+  z-index: 1; /* above the glow */
   display: flex;
   align-items: center;
   gap: var(--space-m);
 }
 
 .site-nav__link {
+  position: relative;
+  font-family: var(--font-mono);
   font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
   color: var(--text-muted);
-  letter-spacing: 0.01em;
 }
 
-.site-nav__link:hover {
-  color: var(--text);
+/* Accent number prefix that echoes the section eyebrows ("03 / Work"): the
+   value is the real section number, supplied per link via data-num. */
+.site-nav__link::before {
+  content: attr(data-num);
+  margin-right: 0.4em;
+  color: var(--accent);
+  font-size: 0.85em;
 }
 
-/* Scroll-spy current-section state (set by nav.js). Brighter than the muted
-   default — a quiet "you are here". */
+/* Accent underline that grows from the left on hover and stays for the current
+   section. The line is laid out at full width and revealed via scaleX, so the
+   animation runs on the compositor (no layout work). */
+.site-nav__link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -4px;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.site-nav__link:hover,
+/* Scroll-spy current-section state (set by nav.js) — burnt orange "you are
+   here" that matches the site's accent. */
 .site-nav__link.is-active {
+  color: var(--accent);
+}
+
+.site-nav__link:hover::after,
+.site-nav__link.is-active::after {
+  transform: scaleX(1);
+}
+
+/* Hairline that separates the nav links from the Contact CTA — gives the right
+   side rhythm instead of four items in a flat row. */
+.site-nav__divider {
+  width: 1px;
+  height: 1.3em;
+  background: var(--line-strong);
+}
+
+/* Contact CTA restyled as a text link in the nav's mono language rather than a
+   boxed button — slightly larger and accent-coloured so it still reads as the
+   primary action, with an arrow that nudges on hover. The .btn / .btn--ghost
+   box styles from base.css are intentionally reset here. */
+.site-nav .btn--ghost {
+  border: none;
+  background: none;
+  padding: 0;
+  border-radius: 0;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+
+  font-family: var(--font-mono);
+  font-size: 0.95rem; /* a touch larger than the nav links */
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  text-shadow: 0 0 12px rgba(200, 100, 60, 0.35);
+  transition: color var(--dur-fast) var(--ease-out),
+    text-shadow var(--dur-fast) var(--ease-out);
+}
+
+.site-nav .btn--ghost::after {
+  content: "→";
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.site-nav .btn--ghost:hover {
   color: var(--text);
+  text-shadow: 0 0 18px rgba(200, 100, 60, 0.55);
+}
+
+.site-nav .btn--ghost:hover::after {
+  transform: translateX(4px);
 }
 
 /* Collapse nav links on small screens; brand + CTA remain (menu added later).*/
@@ -84,7 +194,8 @@ html:not(.is-ready) [data-reveal] {
   .site-nav {
     gap: var(--space-s);
   }
-  .site-nav__link {
+  .site-nav__link,
+  .site-nav__divider {
     display: none;
   }
 }
@@ -467,6 +578,19 @@ html:not(.is-ready) [data-reveal] {
   background: linear-gradient(to bottom, var(--bg), transparent);
 }
 
+/* Bottom fade — the smoke toner ud i mørket so there's no hard lower edge.
+   Taller than the top fade because the Work section pulls up over this zone
+   (see .work.section), so the smoke should already be well into the dark. */
+.intro__fade-bottom {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  height: 42vh;   /* slow dissolve, short enough not to swallow the smoke */
+  z-index: 3;
+  pointer-events: none;
+  background: linear-gradient(to top, var(--bg), transparent);
+}
+
 /* Keep the copy above all background layers. */
 .intro .container {
   position: relative;
@@ -495,7 +619,8 @@ html:not(.is-ready) [data-reveal] {
     min-height: 80dvh; /* trimmed — less empty air above and below */
     display: grid;
     align-items: center;
-    padding-block: var(--space-l);
+    padding-top: var(--space-l);
+    padding-bottom: 10vh; /* room for the BASED IN / WHAT I MAKE columns above the seam */
   }
 
   /* Single track — the image is absolute, the copy is placed on the right and
@@ -588,9 +713,29 @@ html:not(.is-ready) [data-reveal] {
    ========================================================================== */
 
 /* Tighten the vertical air markedly: much less empty space above the heading,
-   and a closer gap down to the first case. */
+   and a closer gap down to the first case.
+
+   Overlap: Work pulls its solid dark background up over the Studio smoke's
+   bottom fade, so the two sections share a dark seam instead of butting edge to
+   edge. The negative margin only moves the box up; the matching extra top
+   padding restores the heading's original gap, so the content rhythm above is
+   unchanged — only the dark overlap is new. position/z-index keep this opaque
+   layer painting over the smoke. */
 .work.section {
-  padding-top: var(--space-l);
+  position: relative;
+  z-index: 1;
+  /* Transparent at the top so the smoke's long fade reads straight through the
+     seam (no hard solid-dark edge chopping the dissolve), then resolves to the
+     base colour for the cases below. The smoke is let to live further down
+     before it tones out. */
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 15%,
+    var(--bg) 50%
+  );
+  margin-top: -4vh;   /* gentle — just enough to layer over the smoke, not swallow it */
+  padding-top: 14vh;  /* pushes the Work content back down, clear of the seam */
 }
 
 /* The work heading is the one centred block — a calm "now, the work" moment
@@ -601,6 +746,9 @@ html:not(.is-ready) [data-reveal] {
   text-align: center;
   max-width: 54ch;
   margin-bottom: var(--space-2xl);
+  margin-top: -8vh;   /* lift the heading up into the tail of the smoke's dissolve */
+  position: relative;
+  z-index: 4;         /* keep the heading above the fade layer */
 }
 
 /* Space between cases comes from rhythm, not boxes. */
@@ -627,6 +775,17 @@ html:not(.is-ready) [data-reveal] {
   line-height: var(--leading-normal);
   color: var(--text);
   max-width: 54ch;
+}
+
+/* NAS brand cyan — deliberately scoped to the NAS case only, a nod to the
+   client's own accent (#3BB6E8 from their documents). Defined on the case so
+   it never leaks into the portfolio's orange accent system. */
+.case--primary {
+  --nas-cyan: #3BB6E8;
+}
+
+.nas-accent {
+  color: var(--nas-cyan);
 }
 
 /* Scope tags — mono pills. The two document tags carry the single accent in

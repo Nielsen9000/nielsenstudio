@@ -62,15 +62,16 @@
   <!-- Fixed, inert texture layer. Noise asset wired in later (see ASSETS.md). -->
   <div class="grain" aria-hidden="true"></div>
 
-  <header class="site-header">
-    <a class="site-header__brand" href="#top" aria-label="Nielsen Studio — home">
+  <header class="site-header" data-reveal-stagger>
+    <a class="site-header__brand" href="#top" aria-label="Nielsen Studio — home" data-reveal>
       Nielsen Studio
     </a>
     <nav class="site-nav" aria-label="Primary">
-      <a class="site-nav__link" href="#work">Work</a>
-      <a class="site-nav__link" href="#services">Services</a>
-      <a class="site-nav__link" href="#about">About</a>
-      <a class="btn btn--ghost" href="#contact" data-magnetic>Contact</a>
+      <a class="site-nav__link" href="#work" data-num="03" data-reveal>Work</a>
+      <a class="site-nav__link" href="#services" data-num="04" data-reveal>Services</a>
+      <a class="site-nav__link" href="#about" data-num="05" data-reveal>About</a>
+      <span class="site-nav__divider" aria-hidden="true" data-reveal></span>
+      <a class="btn btn--ghost" href="#contact" data-magnetic data-reveal>Contact</a>
     </nav>
   </header>
 
@@ -181,6 +182,9 @@
         <!-- Mirror of the hero's bottom fade: the Studio smoke starts from pure
              base colour at the top edge, so the sections meet in shared dark. -->
         <div class="intro__fade-top" aria-hidden="true"></div>
+        <!-- Bottom fade: the smoke dissolves back into base colour so it has no
+             hard lower edge — the Work section then pulls up over this dark zone. -->
+        <div class="intro__fade-bottom" aria-hidden="true"></div>
       </div>
 
       <div class="container container--wide">
@@ -245,7 +249,7 @@
             <h3 id="case-nas-title" class="case__title" data-reveal>NAS</h3>
             <p class="case__summary" data-reveal>
               Nordic Advanced Systems builds UAV propulsion engines —
-              purpose-built, NATO-aligned, engineered in Denmark. The job: a web
+              purpose-built, <span class="nas-accent">NATO-aligned</span>, engineered in Denmark. The job: a web
               and document system that matches that technical credibility, screen
               to print.
             </p>
