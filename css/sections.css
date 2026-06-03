@@ -692,6 +692,28 @@ html:not(.is-ready) [data-reveal] {
   transform: translateX(4px);
 }
 
+/* Status marker — same mono treatment + placement as the live-site link, for a
+   case whose site isn't on its real URL yet. Muted label, orange signal dot. */
+.case__status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  align-self: flex-start;
+  margin-top: var(--space-m);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.case__status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--accent);
+}
+
 /* Cover image — wide, sets up the case. */
 .case__cover {
   margin-top: var(--space-l);

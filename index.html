@@ -397,20 +397,84 @@
         </div>
       </article>
 
-      <!-- ---- Royal Nectar Ventures · secondary case ------------------- -->
-      <article class="case case--secondary" aria-labelledby="case-rnv-title">
+      <!-- ---- Royal Nectar Ventures · client case --------------------- -->
+      <!-- Mirrors the NAS case: head → cover → site row (browser frame + flat
+           detail) → facts + live link. Web-only, so no documents block. -->
+      <article class="case" aria-labelledby="case-rnv-title">
         <div class="container">
+          <header class="case__head" data-reveal-stagger>
+            <p class="eyebrow" data-reveal>
+              <span class="eyebrow__index">Case 02</span> / Client
+            </p>
+            <h3 id="case-rnv-title" class="case__title" data-reveal>
+              Royal <span class="accent">Nectar</span> Ventures
+            </h3>
+            <p class="case__summary" data-reveal>
+              A premium brand site, built from scratch for a Ghanaian spirits
+              importer — positioning a brand-new name to look established from
+              the first scroll.
+            </p>
+            <ul class="case__scope" role="list" data-reveal>
+              <li>Brand</li>
+              <li>Website</li>
+            </ul>
+          </header>
+
+          <!-- Cover -->
+          <figure
+            class="media media--wide case__cover"
+            data-media
+            data-label="royal-cover.jpg"
+            data-reveal
+          >
+            <img
+              data-fallback-img
+              src="/assets/img/work/royal-cover.jpg"
+              alt="The Royal Nectar Ventures brand site — hero."
+              width="1600"
+              height="900"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+
+          <!-- The site (zig: media left, text right) -->
           <div class="case__row" data-reveal-stagger>
-            <div class="case__media-col" data-reveal>
+            <div class="case__media-col case__media-col--stack" data-reveal>
+              <!-- Live site in the discreet CSS browser frame. -->
+              <div class="browser">
+                <div class="browser__bar" aria-hidden="true">
+                  <span class="browser__dot"></span>
+                  <span class="browser__dot"></span>
+                  <span class="browser__dot"></span>
+                  <span class="browser__url">royal nectar — collection</span>
+                </div>
+                <figure
+                  class="browser__viewport media"
+                  data-media
+                  data-label="royal-collection.jpg"
+                >
+                  <img
+                    data-fallback-img
+                    src="/assets/img/work/royal-collection.jpg"
+                    alt="The Royal Nectar Ventures collection page."
+                    width="1600"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </figure>
+              </div>
+              <!-- A second view of the site, shown flat as a detail. -->
               <figure
                 class="media media--wide"
                 data-media
-                data-label="royal-nectar-cover.jpg — asset pending"
+                data-label="royal-jerrys.jpg"
               >
                 <img
                   data-fallback-img
-                  src="/assets/img/work/royal-nectar-cover.jpg"
-                  alt="The Royal Nectar Ventures brand and website."
+                  src="/assets/img/work/royal-jerrys.jpg"
+                  alt="A Royal Nectar Ventures product page."
                   width="1600"
                   height="900"
                   loading="lazy"
@@ -419,21 +483,31 @@
               </figure>
             </div>
             <div class="case__text-col" data-reveal>
-              <p class="eyebrow">
-                <span class="eyebrow__index">Case 02</span> / Secondary
+              <p class="case__part-label">The website</p>
+              <p>
+                A premium, hand-built brand site — no page builder — that gives a
+                new importer instant credibility and guides buyers through the
+                range. Written in the same vanilla HTML, CSS and JavaScript this
+                studio runs on.
               </p>
-              <h3 id="case-rnv-title" class="case__title case__title--sm">
-                Royal Nectar Ventures
-              </h3>
-              <p class="case__summary">
-                A Ghanaian drinks importer with a bold, high-energy brand.
-                Brand-led design and a vibrant, commerce-leaning site — hand-built
-                in vanilla HTML, CSS, JavaScript and GSAP.
+              <dl class="facts case__facts">
+                <div class="fact">
+                  <dt>Stack</dt>
+                  <dd>Vanilla HTML, CSS, JS &amp; GSAP</dd>
+                </div>
+                <div class="fact">
+                  <dt>Scope</dt>
+                  <dd>Full brand site, built from scratch</dd>
+                </div>
+                <div class="fact">
+                  <dt>Focus</dt>
+                  <dd>Premium positioning for a new importer</dd>
+                </div>
+              </dl>
+              <p class="case__status">
+                <span class="case__status-dot" aria-hidden="true"></span>
+                Launching soon
               </p>
-              <ul class="case__scope" role="list">
-                <li>Brand</li>
-                <li>Website</li>
-              </ul>
             </div>
           </div>
         </div>
