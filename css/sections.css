@@ -1011,17 +1011,53 @@ html:not(.is-ready) [data-reveal] {
   gap: var(--space-l);
 }
 
-@media (min-width: 48rem) {
+/* Two columns from 720px; the landscape deck spans the full width beneath the
+   two A4 portraits. Below 720px everything stacks into one column. */
+@media (min-width: 45rem) {
   .case__doc-grid {
     grid-template-columns: 1fr 1fr;
   }
+  .case__doc-card--wide {
+    grid-column: 1 / -1;
+  }
 }
 
-/* Each document gets a thin frame; equal width + 16:9 means equal height.
-   The dark margin inside each frame is the source image's drop-shadow float,
-   not dead layout space. */
-.case__doc-item {
-  border: 1px solid var(--line-strong);
+/* Document card: a hairline frame around the cover, with a mono label beneath.
+   Lifts on hover — a short rise, a growing shadow, and a faint orange edge. */
+.case__doc-card {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  overflow: hidden;
+  background-color: var(--surface);
+  transition: transform var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.case__doc-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.55);
+  border-color: rgba(200, 100, 60, 0.3);
+}
+
+/* The card supplies the frame + corners, so the inner cover drops its own. */
+.case__doc-card .media {
+  border-radius: 0;
+}
+
+/* A4 portrait covers (Company Profile + datasheet); the deck stays .media--wide. */
+.media--doc {
+  aspect-ratio: 210 / 297;
+}
+
+/* Label under each cover — same mono label language as the nav / eyebrows. */
+.case__doc-label {
+  padding: var(--space-xs) var(--space-s);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
 }
 
 /* ==========================================================================

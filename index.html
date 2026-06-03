@@ -354,48 +354,84 @@
             </div>
           </div>
 
-          <!-- Part 2 · Documents — text block above, two docs side by side -->
+          <!-- Part 2 · Documents — text lead-in, then the document covers: two
+               A4 portraits side by side, the slide deck full-width beneath.
+               Covers point at each document's FRONT page; real exports drop in
+               later, until then the media fallback shows a labelled slot. -->
           <div class="case__documents" data-reveal-stagger>
             <div class="case__doc-head" data-reveal>
               <p class="case__part-label">Documents</p>
               <h4 class="case__doc-title">The same system, in print.</h4>
               <p>
-                A Company Profile and a technical datasheet that look like they
-                came from the same place as the site — because they did. This
-                pairing of web and print is the work I do that most studios don't.
+                A Company Profile, a technical datasheet and a UAV control-systems
+                deck — all looking like they came from the same place as the site,
+                because they did. This pairing of web and print is the work I do
+                that most studios don't.
               </p>
             </div>
 
             <div class="case__doc-grid" data-reveal>
-              <figure
-                class="media media--wide case__doc-item"
-                data-media
-                data-label="nas-deck.jpg — Company Profile cover"
-              >
-                <img
-                  data-fallback-img
-                  src="/assets/img/work/nas-deck.jpg"
-                  alt="The NAS Company Profile cover."
-                  width="1600"
-                  height="900"
-                  loading="lazy"
-                  decoding="async"
-                />
+              <figure class="case__doc-card">
+                <div
+                  class="media media--doc"
+                  data-media
+                  data-label="nas-company-profile.jpg — Company Profile cover"
+                >
+                  <img
+                    data-fallback-img
+                    src="/assets/img/work/nas-company-profile.jpg"
+                    alt="The NAS Company Profile front cover."
+                    width="1240"
+                    height="1754"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <figcaption class="case__doc-label">
+                  Company Profile — 4PP A4
+                </figcaption>
               </figure>
-              <figure
-                class="media media--wide case__doc-item"
-                data-media
-                data-label="nas-pdf.jpg — technical datasheet"
-              >
-                <img
-                  data-fallback-img
-                  src="/assets/img/work/nas-pdf.jpg"
-                  alt="A NAS technical datasheet."
-                  width="1600"
-                  height="900"
-                  loading="lazy"
-                  decoding="async"
-                />
+
+              <figure class="case__doc-card">
+                <div
+                  class="media media--doc"
+                  data-media
+                  data-label="nas-datasheet.jpg — datasheet cover"
+                >
+                  <img
+                    data-fallback-img
+                    src="/assets/img/work/nas-datasheet.jpg"
+                    alt="The NAS 2C / 2E technical datasheet front."
+                    width="1240"
+                    height="1754"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <figcaption class="case__doc-label">
+                  NAS 2C / 2E Datasheet — 2PP A4
+                </figcaption>
+              </figure>
+
+              <figure class="case__doc-card case__doc-card--wide">
+                <div
+                  class="media media--wide"
+                  data-media
+                  data-label="nas-control-systems.jpg — deck title slide"
+                >
+                  <img
+                    data-fallback-img
+                    src="/assets/img/work/nas-control-systems.jpg"
+                    alt="The NAS UAV Control Systems deck title slide."
+                    width="1600"
+                    height="900"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+                <figcaption class="case__doc-label">
+                  UAV Control Systems — 7 Slides
+                </figcaption>
               </figure>
             </div>
           </div>
