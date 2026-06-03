@@ -253,8 +253,13 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
     rafId = requestAnimationFrame(tick);
   }
   function pause() {
+    if (!running) return;
     running = false;
     cancelAnimationFrame(rafId);
+    // Leave a complete frame on the canvas so it never blanks while paused.
+    // (Frame-based spin means no THREE.Clock delta to skip — it simply resumes
+    // from the exact rotation it stopped at, with no freeze or jump.)
+    if (!document.hidden) renderer.render(scene, camera);
   }
 
   // Only render while the hero is actually visible — saves the GPU on scroll.
