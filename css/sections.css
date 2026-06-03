@@ -406,23 +406,25 @@ html:not(.is-ready) [data-reveal] {
 
 .intro__bg-video {
   z-index: 1;
-  filter: brightness(1.5) contrast(1.05) saturate(1.1);
+  /* No CSS filter — the brightness/contrast/saturation is baked into the video
+     file, so no per-frame filter pass runs while the section is on screen. */
 }
 
-/* Overlay between background and copy — light enough that the smoke clearly
-   shows, a little firmer on the right where the text sits (the copy also has
-   its own dark backing on desktop, so the overlay can stay gentle). */
+/* Symmetric overlay: dimmed in the CENTRE so the centred copy stays crisp,
+   feathering to near-clear at the edges so the smoke (which rises from both
+   bottom corners) frames the text on both sides. A smooth radial — the
+   readability backing is the feather itself, so there's no visible box edge. */
 .intro__overlay {
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: linear-gradient(
-      to left,
-      rgba(13, 13, 15, 0.62) 0%,
-      rgba(13, 13, 15, 0.28) 50%,
-      rgba(13, 13, 15, 0.32) 100%
-    ),
-    linear-gradient(to bottom, rgba(13, 13, 15, 0.18), rgba(13, 13, 15, 0.34));
+  background: radial-gradient(
+    78% 90% at 50% 48%,
+    rgba(13, 13, 15, 0.6) 0%,
+    rgba(13, 13, 15, 0.42) 42%,
+    rgba(13, 13, 15, 0.12) 76%,
+    rgba(13, 13, 15, 0.02) 100%
+  );
 }
 
 /* Top fade-to-dark — mirror of the hero's bottom fade. The Studio smoke starts
@@ -477,30 +479,33 @@ html:not(.is-ready) [data-reveal] {
     gap: 0;
   }
 
+  /* Centred editorial block — deliberately different from the hero's left
+     anchor, to vary the rhythm down the page. The block sits in the calm dark
+     middle; the smoke frames it on both sides. Text stays left-aligned inside. */
   .intro__text {
     position: relative;
     z-index: 2; /* above the background layers */
-    justify-self: center; /* centred block — the smoke frames it on both sides */
-    max-width: 760px; /* wider so the copy fills the section, not floats in it */
+    justify-self: center;
+    max-width: 640px; /* comfortable measure; lines never run too long */
     gap: var(--space-xs);
     text-align: left;
   }
 
   .intro__statement {
     font-size: 1.95rem;
-    max-width: 680px; /* fuller headline, still comfortable line lengths */
+    max-width: 560px; /* keep headline lines tight */
   }
 
   .intro__support {
     font-size: var(--step-0);
-    max-width: 64ch;
+    max-width: 52ch;
   }
 
   /* Facts as three even columns in one balanced row (was 2 + 1 orphan). */
   .intro__facts {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    column-gap: var(--space-m);
+    column-gap: var(--space-s);
     margin-top: var(--space-s);
   }
 
@@ -512,36 +517,18 @@ html:not(.is-ready) [data-reveal] {
     border-bottom: 0; /* grid uses only the top hairlines to structure cells */
   }
 
-  /* Readability backing — a dark panel tied to the copy. Fully opaque behind
-     the text (so it's always crisp), dissolving to the left into the image so
-     the two layers connect rather than collide. Sits above the image, below
-     the text glyphs. CRITICAL: this is what guarantees legibility on overlap. */
-  .intro__text::before {
-    content: "";
-    position: absolute;
-    inset: -1.6rem -2.2rem;
-    z-index: -1;
-    background: radial-gradient(
-      120% 120% at 50% 50%,
-      rgba(13, 13, 15, 0.74) 0%,
-      rgba(13, 13, 15, 0.45) 55%,
-      transparent 100%
-    );
-  }
-
-  /* A whisper of the hero's burnt-orange light over the background. A plain
-     low-opacity radial (NO mix-blend-mode) — blending against the always-
-     changing video forced a full-screen recomposite every frame, which is what
-     made section 2 jank. This composites normally and stays cheap. */
+  /* A whisper of the hero's burnt-orange light at the base centre, where the
+     smoke rises, to give it warmth. Plain radial (no mix-blend-mode — that
+     recomposited every frame and caused jank). */
   .intro__overlay::after {
     content: "";
     position: absolute;
     inset: 0;
     pointer-events: none;
     background: radial-gradient(
-      48% 55% at 30% 42%,
-      rgba(200, 100, 60, 0.12),
-      transparent 62%
+      62% 46% at 50% 80%,
+      rgba(200, 100, 60, 0.1),
+      transparent 60%
     );
   }
 }

@@ -68,6 +68,9 @@ export function initBackgroundVideos() {
 
 function safePlay(video) {
   video.muted = true; // required for programmatic play to be permitted
+  // Optional slow-down for a calmer drift (e.g. data-playback-rate="0.6").
+  const rate = parseFloat(video.dataset.playbackRate);
+  if (rate > 0) video.playbackRate = rate;
   const played = video.play();
   if (played && typeof played.catch === "function") played.catch(() => {});
 }
