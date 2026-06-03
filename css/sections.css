@@ -44,16 +44,15 @@ html:not(.is-ready) [data-reveal] {
      scrolls it condenses into a glassy strip (.is-scrolled, toggled by JS). */
   background: transparent;
   border-bottom: 1px solid transparent;
-  transition: background 0.3s ease, backdrop-filter 0.3s ease,
-    border-color 0.3s ease;
+  transition: background 0.3s ease, border-color 0.3s ease;
 }
 
-/* Scrolled state: frosted-glass bar with a hairline, so the nav stays legible
-   once the dark content scrolls up behind it. */
+/* Scrolled state: a near-opaque dark bar with a hairline. We deliberately avoid
+   backdrop-filter: blurring a fixed bar forces a re-blur of the (moving, video)
+   content behind it every scroll frame, which made the hero→Studio scroll
+   janky. A high-opacity solid reads just as clean and costs nothing per frame. */
 .site-header.is-scrolled {
-  background: rgba(13, 13, 15, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: rgba(13, 13, 15, 0.92);
   border-bottom-color: var(--line);
 }
 
