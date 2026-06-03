@@ -231,7 +231,8 @@ strong {
   border-color: var(--line-strong);
 }
 
-.btn--ghost:hover {
+.btn--ghost:hover,
+.btn--ghost.is-active {
   border-color: var(--accent);
   color: var(--accent);
 }

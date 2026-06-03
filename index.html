@@ -421,15 +421,10 @@
             </ul>
           </header>
 
-          <!-- Cover -->
-          <figure
-            class="media media--wide case__cover"
-            data-media
-            data-label="royal-cover.jpg"
-            data-reveal
-          >
+          <!-- Cover — a looping hero video over the static poster. -->
+          <figure class="media media--wide case__cover" data-reveal>
             <img
-              data-fallback-img
+              class="case__cover-still"
               src="/assets/img/work/royal-cover.jpg"
               alt="The Royal Nectar Ventures brand site — hero."
               width="1600"
@@ -437,6 +432,21 @@
               loading="lazy"
               decoding="async"
             />
+            <!-- Poster + the still cover the reduced-motion / mobile paths,
+                 where the video is hidden. Pauses off-screen (data-bg-video). -->
+            <video
+              class="case__cover-video"
+              data-bg-video
+              autoplay
+              muted
+              loop
+              playsinline
+              preload="none"
+              poster="/assets/img/work/royal-cover.jpg"
+            >
+              <source src="/assets/video/royal-cover.webm" type="video/webm" />
+              <source src="/assets/video/royal-cover.mp4" type="video/mp4" />
+            </video>
           </figure>
 
           <!-- The site (zig: media left, text right) -->

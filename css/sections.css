@@ -73,6 +73,12 @@ html:not(.is-ready) [data-reveal] {
   color: var(--text);
 }
 
+/* Scroll-spy current-section state (set by nav.js). Brighter than the muted
+   default — a quiet "you are here". */
+.site-nav__link.is-active {
+  color: var(--text);
+}
+
 /* Collapse nav links on small screens; brand + CTA remain (menu added later).*/
 @media (max-width: 48rem) {
   .site-nav {
@@ -738,6 +744,35 @@ html:not(.is-ready) [data-reveal] {
 /* Cover image — wide, sets up the case. */
 .case__cover {
   margin-top: var(--space-l);
+}
+
+/* Cover that can hold a looping video over the static poster. Both fill the
+   16:9 frame; the video sits on top once it can play. */
+.case__cover-still,
+.case__cover-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.case__cover-video {
+  z-index: 1;
+}
+
+/* Reduced motion + mobile: no autoplay — the static poster carries the cover.
+   display:none also stops the IntersectionObserver from loading/playing it. */
+@media (prefers-reduced-motion: reduce) {
+  .case__cover-video {
+    display: none;
+  }
+}
+
+@media (max-width: 47.99rem) {
+  .case__cover-video {
+    display: none;
+  }
 }
 
 /* Zig-zag rows: image one side, text the other; alternate via --reverse. */

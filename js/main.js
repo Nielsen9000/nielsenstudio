@@ -10,6 +10,7 @@ import { initHero3D } from "./hero3d.js";
 import { initMagnetic } from "./magnetic.js";
 import { initContact } from "./contact.js";
 import { initMediaFallback, initBackgroundVideos } from "./media.js";
+import { initNav } from "./nav.js";
 
 /* Single source of truth for "may we animate?".
    Read live so a user toggling the OS setting is respected on next load.     */
@@ -31,6 +32,7 @@ function boot() {
      its dependency (GSAP / Three.js) failed to load from the CDN.            */
   initMediaFallback(); // independent of motion — always run
   initBackgroundVideos(); // play hero/intro loops when they scroll into view
+  initNav(); // scroll-spy: highlight the current section's nav link
   initAnimations({ reducedMotion: prefersReducedMotion });
   initHero3D({ reducedMotion: prefersReducedMotion });
   initMagnetic({ reducedMotion: prefersReducedMotion });
