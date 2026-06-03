@@ -272,6 +272,26 @@ html:not(.is-ready) [data-reveal] {
   display: none;
 }
 
+/* Quiet technical signature for the hand-built 3D object — same mono treatment
+   as the drag hint but dimmer, so it reads as a signature, not a label. Sits
+   just above the hint, and hides with it when there's no live canvas. */
+.hero__tech {
+  position: absolute;
+  z-index: var(--z-raised);
+  inset-block-end: calc(var(--space-l) + 1.7rem);
+  inset-inline-end: var(--gutter);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  opacity: 0.6;
+}
+
+.hero__canvas[data-fallback] ~ .hero__tech {
+  display: none;
+}
+
 .hero__hint-dot {
   width: 7px;
   height: 7px;
@@ -287,8 +307,9 @@ html:not(.is-ready) [data-reveal] {
 }
 
 @media (max-width: 48rem) {
-  /* On phones the fallback image carries the hero; drop the hint entirely. */
-  .hero__hint {
+  /* On phones the fallback image carries the hero; drop the hint + signature. */
+  .hero__hint,
+  .hero__tech {
     display: none;
   }
 }
