@@ -226,12 +226,23 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   // trimmed geometry above.)
   let rafId = 0;
   let running = false;
+  let lastTime = 0;
 
-  function tick() {
+  // Idle spin in radians PER SECOND (not per frame), so the speed is identical
+  // on a 60Hz and a 240Hz display. The object is present from the start (no
+  // entrance flourish) — it just spins calmly while the text types in.
+  const SPIN_RATE = 0.34;
+
+  function tick(now) {
     rafId = requestAnimationFrame(tick);
 
+    // Seconds since the last frame, capped so a tab-resume / long gap can't
+    // jump the spin. First frame (lastTime 0) falls back to a 60fps step.
+    const dt = lastTime ? Math.min((now - lastTime) / 1000, 0.05) : 1 / 60;
+    lastTime = now;
+
     // Idle self-spin — continuous, in place, paused only during a drag.
-    if (!userInteracting) mesh.rotation.y += 0.004;
+    if (!userInteracting) mesh.rotation.y += SPIN_RATE * dt;
 
     // Ease the pointer values and tilt the mesh toward the cursor (transform
     // only). rotation.y is owned by the spin above, so we set x/z, not y.
@@ -253,9 +264,10 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
     if (!running) return;
     running = false;
     cancelAnimationFrame(rafId);
+    // Reset the delta clock so the first frame after resuming starts fresh —
+    // no big time jump. The mesh keeps its exact rotation, so no visual snap.
+    lastTime = 0;
     // Leave a complete frame on the canvas so it never blanks while paused.
-    // (Frame-based spin means no THREE.Clock delta to skip — it simply resumes
-    // from the exact rotation it stopped at, with no freeze or jump.)
     if (!document.hidden) renderer.render(scene, camera);
   }
 

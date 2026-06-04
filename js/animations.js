@@ -67,28 +67,70 @@ function initHeroIntro(gsap) {
   const hero = document.querySelector("[data-hero-intro]");
   if (!hero) return;
 
-  const lines = hero.querySelectorAll("[data-reveal]");
-  const canvas = document.querySelector("[data-hero-canvas]");
+  const eyebrow = hero.querySelector(".eyebrow");
+  const title = hero.querySelector(".hero__title");
+  const lead = hero.querySelector(".lead");
+
+  // Split the headline into per-character spans so it can TYPE in (the "builds
+  // up" entrance). CSS hid the title as a [data-reveal]; reveal the block itself
+  // but keep the characters hidden until the timeline types them. aria-label
+  // preserves the full heading for screen readers despite the per-char spans.
+  const chars = title ? splitToChars(title) : [];
+  if (title && chars.length) {
+    title.setAttribute("aria-label", title.textContent.replace(/\s+/g, " ").trim());
+    gsap.set(title, { opacity: 1, y: 0 });
+    gsap.set(chars, { opacity: 0 });
+  }
 
   const tl = gsap.timeline({
     defaults: { ease: SIGNATURE.ease, duration: SIGNATURE.duration },
   });
 
-  tl.to(lines, {
-    opacity: 1,
-    y: 0,
-    stagger: SIGNATURE.stagger,
-  });
-
-  // Canvas (live render or static fallback) eases in slightly behind the text.
-  if (canvas) {
-    tl.fromTo(
-      canvas,
-      { opacity: 0 },
-      { opacity: 1, duration: 1.2 },
-      0.25 // overlap: starts a beat after the first line rises
-    );
+  // Eyebrow first, then the headline reveals character by character — a slow,
+  // soft cascade (each char fades over 0.25s, overlapping the next) for a
+  // cinematic build rather than a hard typewriter. Then the lead settles in.
+  if (eyebrow) tl.to(eyebrow, { opacity: 1, y: 0 });
+  if (chars.length) {
+    tl.to(chars, { opacity: 1, duration: 0.25, stagger: 0.045, ease: "power2.out" }, 0.2);
   }
+  if (lead) tl.to(lead, { opacity: 1, y: 0 }, ">-0.3");
+
+  // The 3D object is intentionally NOT animated in — it's present from the start
+  // (renders as soon as Three.js is ready) and just spins calmly while the text
+  // types in. No fade, so nothing "pops" or rushes in.
+}
+
+/**
+ * Wrap every visible character of an element in its own <span> (whitespace is
+ * left as plain text nodes so words still wrap normally). Recurses into child
+ * elements — e.g. the headline's <span class="accent"> — so those characters
+ * keep their colour. Returns the flat list of char spans, in order.
+ */
+function splitToChars(root) {
+  const chars = [];
+  const process = (node) => {
+    for (const child of Array.from(node.childNodes)) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const frag = document.createDocumentFragment();
+        for (const ch of child.textContent) {
+          if (ch === " " || ch === "\n" || ch === "\t") {
+            frag.appendChild(document.createTextNode(ch));
+          } else {
+            const span = document.createElement("span");
+            span.className = "hero__char";
+            span.textContent = ch;
+            chars.push(span);
+            frag.appendChild(span);
+          }
+        }
+        node.replaceChild(frag, child);
+      } else if (child.nodeType === Node.ELEMENT_NODE) {
+        process(child); // keep the element (e.g. .accent) and split its text
+      }
+    }
+  };
+  process(root);
+  return chars;
 }
 
 /**
