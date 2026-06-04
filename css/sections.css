@@ -838,10 +838,14 @@ html.is-ready .brand-dot {
 }
 
 /* NAS brand cyan — deliberately scoped to the NAS case only, a nod to the
-   client's own accent (#3BB6E8 from their documents). Defined on the case so
-   it never leaks into the portfolio's orange accent system. */
+   client's own accent (#3BB6E8 from their documents). Overriding --accent here
+   means everything inside the case that reads the variable — the Case index,
+   scope pills, part-labels and the live-link — inherits cyan automatically,
+   while the rest of the site keeps its burnt orange. */
 .case--primary {
   --nas-cyan: #3BB6E8;
+  --accent: var(--nas-cyan);
+  --accent-hover: #5cc4ed; /* cyan lifted for the live-link hover */
 }
 
 .nas-accent {
@@ -1099,6 +1103,12 @@ html.is-ready .brand-dot {
   transform: translateY(-8px);
   box-shadow: 0 18px 40px -10px rgba(0, 0, 0, 0.55);
   border-color: rgba(200, 100, 60, 0.3);
+}
+
+/* This hover glow is a hardcoded orange rgba, so it can't follow the scoped
+   --accent override above — restate it in NAS cyan inside the case. */
+.case--primary .case__doc-card:hover {
+  border-color: rgba(59, 182, 232, 0.3);
 }
 
 /* The card supplies the frame + corners, so the inner cover drops its own. */
