@@ -897,8 +897,10 @@ html.is-ready .brand-dot {
   --accent-hover: #E7A829; /* their lighter gold, for hover/active   */
 }
 
-/* Scope tags — mono pills. The two document tags carry the single accent in
-   this section, signalling the differentiator (print, not just web). */
+/* Scope tags — mono pills that live in the case's own colour world: a dimmed
+   accent border at rest, filling with the full accent on hover. Because they
+   read the scoped --accent, they're cyan in NAS and gold in Royal Nectar with
+   no per-case colour here. */
 .case__scope {
   display: flex;
   flex-wrap: wrap;
@@ -913,15 +915,25 @@ html.is-ready .brand-dot {
   font-size: var(--step--1);
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--text-muted);
+  color: var(--text);
   padding: var(--space-3xs) var(--space-xs);
-  border: 1px solid var(--line-strong);
+  /* Dimmed accent border — color-mix derives the tint straight from the scoped
+     --accent, so the pill tracks each case (cyan / gold) automatically. */
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   border-radius: 999px;
+  background-color: transparent;
+  transition: color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.case__scope-doc {
-  color: var(--accent);
+/* Hover: fill with the case accent, dark text for contrast, a small lift. */
+.case__scope li:hover {
+  color: var(--bg);
+  background-color: var(--accent);
   border-color: var(--accent);
+  transform: translateY(-2px);
 }
 
 /* Reusable facts list — label / value rows with hairline dividers, the same
