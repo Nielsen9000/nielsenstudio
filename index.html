@@ -199,15 +199,16 @@
             <p class="eyebrow" data-reveal>
               <span class="eyebrow__index">02</span> / Studio
             </p>
-            <h2 id="intro-head" class="intro__statement" data-reveal>
+            <!-- Statement + support both wipe in left→right (replacing the plain
+                 fade) so the Studio copy clearly draws in on scroll — see
+                 initWipeReveals. data-reveal-wipe replaces data-reveal so only the
+                 wipe runs on each. -->
+            <h2 id="intro-head" class="intro__statement" data-reveal-wipe>
               I design and build websites — and the
               <span class="intro__accent">brand collateral</span> around them.
               One studio for your site, your company PDF and your pitch deck,
               so it all speaks in the same voice.
             </h2>
-            <!-- Wipe reveal (left→right) instead of the fade — see
-                 initWipeReveals in animations.js. Replaces data-reveal here so
-                 only one animation runs on this element. -->
             <p class="intro__support" data-reveal-wipe>
               Built for small businesses and founders who want work that looks
               considered and <span class="accent">actually converts</span> — not a
@@ -250,7 +251,9 @@
             <span class="eyebrow__index">03</span> / Work
           </p>
           <h2 id="work-head" data-reveal>Selected <span class="accent">work.</span></h2>
-          <p class="section-lead" data-reveal>
+          <!-- Wipe reveal (left→right) instead of the fade — the lead line draws
+               in beneath the heading, same motif as the Studio support copy. -->
+          <p class="section-lead" data-reveal-wipe>
             Recent client work — built as complete systems, screen to print.
           </p>
         </div>
@@ -266,7 +269,9 @@
                 <span class="eyebrow__index">Case 01</span> / Primary
               </p>
               <h3 id="case-nas-title" class="case__title" data-reveal>NAS</h3>
-              <p class="case__summary" data-reveal>
+              <!-- Summary wipes in left→right (the case's lead line), mirroring
+                   the Studio support copy; title above keeps the fade + rise. -->
+              <p class="case__summary" data-reveal-wipe>
                 Nordic Advanced Systems builds UAV propulsion engines —
                 purpose-built, <span class="nas-accent">NATO-aligned</span>, engineered in Denmark. The job: a web
                 and document system that matches that technical credibility, screen
@@ -316,7 +321,7 @@
           </figure>
 
           <!-- Part 1 · Web (zig: media left, text right) -->
-          <div class="case__row" data-reveal-stagger>
+          <div class="case__row">
             <div class="case__media-col case__media-col--stack" data-reveal>
               <!-- Live site hero in the discreet CSS browser frame. -->
               <div class="browser">
@@ -359,29 +364,39 @@
                 />
               </figure>
             </div>
-            <div class="case__text-col" data-reveal>
-              <p class="case__part-label">The website</p>
-              <p>
+            <div class="case__text-col">
+              <p class="case__part-label" data-reveal>The website</p>
+              <!-- Prose wipes in left→right; label, facts and link keep fade+rise. -->
+              <p data-reveal-wipe>
                 A fast, <span class="accent">hand-built</span> site — no page builder — that positions NAS
                 and routes visitors straight to contact. Written in the same
                 vanilla HTML, CSS and JavaScript this studio runs on.
               </p>
-              <dl class="facts case__facts">
-                <div class="fact">
+              <!-- Facts cascade in one row at a time (their own stagger group,
+                   triggered when the list scrolls in) — same slow timing as the
+                   Studio facts. -->
+              <dl
+                class="facts case__facts"
+                data-reveal-stagger
+                data-reveal-duration="1.3"
+                data-reveal-gap="0.32"
+              >
+                <div class="fact" data-reveal>
                   <dt>Stack</dt>
                   <dd>Vanilla HTML, CSS, JS &amp; GSAP</dd>
                 </div>
-                <div class="fact">
+                <div class="fact" data-reveal>
                   <dt>Scope</dt>
                   <dd>Multi-page site, hosted on Vercel</dd>
                 </div>
-                <div class="fact">
+                <div class="fact" data-reveal>
                   <dt>Focus</dt>
                   <dd>Positioning &amp; routing to contact</dd>
                 </div>
               </dl>
               <a
                 class="case__live-link"
+                data-reveal
                 href="https://nordicadvancedsystems.com"
                 target="_blank"
                 rel="noopener noreferrer"
@@ -396,10 +411,11 @@
                Covers point at each document's FRONT page; real exports drop in
                later, until then the media fallback shows a labelled slot. -->
           <div class="case__documents" data-reveal-stagger>
-            <div class="case__doc-head" data-reveal>
-              <p class="case__part-label">Documents</p>
-              <h4 class="case__doc-title">The same system, in print.</h4>
-              <p>
+            <div class="case__doc-head">
+              <p class="case__part-label" data-reveal>Documents</p>
+              <h4 class="case__doc-title" data-reveal>The same system, in print.</h4>
+              <!-- Prose wipes in left→right; the part-label and title fade + rise. -->
+              <p data-reveal-wipe>
                 A Company Profile, a technical datasheet and a UAV control-systems
                 deck — all looking like they came from <span class="accent">the same place</span> as the site,
                 because they did. This pairing of web and print is the work I do
@@ -488,7 +504,8 @@
             <h3 id="case-rnv-title" class="case__title" data-reveal>
               Royal <span class="accent">Nectar</span> Ventures
             </h3>
-            <p class="case__summary" data-reveal>
+            <!-- Summary wipes in left→right, same motif as the NAS case. -->
+            <p class="case__summary" data-reveal-wipe>
               A premium brand site, built from scratch for a Ghanaian spirits
               importer — positioning a brand-new name to look <span class="accent">established</span> from
               the first scroll.
@@ -528,7 +545,7 @@
           </figure>
 
           <!-- The site (zig: media left, text right) -->
-          <div class="case__row" data-reveal-stagger>
+          <div class="case__row">
             <div class="case__media-col case__media-col--stack" data-reveal>
               <!-- Live site in the discreet CSS browser frame. -->
               <div class="browser">
@@ -571,29 +588,37 @@
                 />
               </figure>
             </div>
-            <div class="case__text-col" data-reveal>
-              <p class="case__part-label">The website</p>
-              <p>
+            <div class="case__text-col">
+              <p class="case__part-label" data-reveal>The website</p>
+              <!-- Prose wipes in left→right, same motif as the NAS case. -->
+              <p data-reveal-wipe>
                 A premium, hand-built brand site — no page builder — that gives a
                 new importer <span class="accent">instant credibility</span> and guides buyers through the
                 range. Written in the same vanilla HTML, CSS and JavaScript this
                 studio runs on.
               </p>
-              <dl class="facts case__facts">
-                <div class="fact">
+              <!-- Facts cascade in one row at a time (their own stagger group),
+                   same slow timing as the NAS + Studio facts. -->
+              <dl
+                class="facts case__facts"
+                data-reveal-stagger
+                data-reveal-duration="1.3"
+                data-reveal-gap="0.32"
+              >
+                <div class="fact" data-reveal>
                   <dt>Stack</dt>
                   <dd>Vanilla HTML, CSS, JS &amp; GSAP</dd>
                 </div>
-                <div class="fact">
+                <div class="fact" data-reveal>
                   <dt>Scope</dt>
                   <dd>Full brand site, built from scratch</dd>
                 </div>
-                <div class="fact">
+                <div class="fact" data-reveal>
                   <dt>Focus</dt>
                   <dd>Premium positioning for a new importer</dd>
                 </div>
               </dl>
-              <p class="case__status">
+              <p class="case__status" data-reveal>
                 <span class="case__status-dot" aria-hidden="true"></span>
                 Launching soon
               </p>
