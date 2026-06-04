@@ -31,6 +31,7 @@ export function initAnimations({ reducedMotion }) {
 
   initHeroIntro(gsap);
   revealOnScroll(gsap);
+  initWipeReveals(gsap);
   initBrandDot(gsap);
 }
 
@@ -104,12 +105,17 @@ function revealOnScroll(gsap) {
   );
   groups.forEach((group) => {
     const items = group.querySelectorAll("[data-reveal]");
+    // Optional per-group overrides (data-reveal-duration / data-reveal-gap) for a
+    // slower, more deliberate cascade; otherwise the shared signature timing.
+    const duration =
+      parseFloat(group.dataset.revealDuration) || SIGNATURE.duration;
+    const stagger = parseFloat(group.dataset.revealGap) || SIGNATURE.stagger;
     gsap.to(items, {
       opacity: 1,
       y: 0,
-      duration: SIGNATURE.duration,
+      duration,
       ease: SIGNATURE.ease,
-      stagger: SIGNATURE.stagger,
+      stagger,
       scrollTrigger: { trigger: group, start: "top 80%", once: true },
     });
   });
@@ -124,6 +130,27 @@ function revealOnScroll(gsap) {
       y: 0,
       duration: SIGNATURE.duration,
       ease: SIGNATURE.ease,
+      scrollTrigger: { trigger: el, start: "top 85%", once: true },
+    });
+  });
+}
+
+/**
+ * Wipe reveals: [data-reveal-wipe] elements are painted in left→right by
+ * opening a clip-path, instead of the fade-and-rise. Fires once when the
+ * element reaches view (top 85%), same trigger contract as the singles above.
+ * CSS clips them from the right (html.is-ready [data-reveal-wipe]); here we
+ * animate the clip fully open. Slow (1.2s) so the wipe is clearly visible.
+ */
+function initWipeReveals(gsap) {
+  if (!window.ScrollTrigger) return;
+
+  const els = document.querySelectorAll("[data-reveal-wipe]");
+  els.forEach((el) => {
+    gsap.to(el, {
+      clipPath: "inset(0% 0% 0% 0%)",
+      duration: 2.4,
+      ease: "power2.out",
       scrollTrigger: { trigger: el, start: "top 85%", once: true },
     });
   });

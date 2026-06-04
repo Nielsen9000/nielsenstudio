@@ -190,7 +190,11 @@
 
       <div class="container container--wide">
         <div class="intro__grid">
-          <div class="intro__text" data-reveal-stagger>
+          <!-- No data-reveal-stagger here on purpose: this block is tall, so its
+               items reveal per-element (top 85%) as each scrolls in, instead of
+               all firing off the group's top — which played the lower ones (the
+               support copy, the facts) off-screen, so they looked pre-revealed. -->
+          <div class="intro__text">
             <p class="eyebrow" data-reveal>
               <span class="eyebrow__index">02</span> / Studio
             </p>
@@ -200,21 +204,32 @@
               One studio for your site, your company PDF and your pitch deck,
               so it all speaks in the same voice.
             </h2>
-            <p class="intro__support" data-reveal>
+            <!-- Wipe reveal (left→right) instead of the fade — see
+                 initWipeReveals in animations.js. Replaces data-reveal here so
+                 only one animation runs on this element. -->
+            <p class="intro__support" data-reveal-wipe>
               Built for small businesses and founders who want work that looks
-              considered and actually converts — not a template with a logo on
-              top.
+              considered and <span class="accent">actually converts</span> — not a
+              template with a logo on top.
             </p>
-            <dl class="intro__facts" data-reveal>
-              <div class="intro__fact">
+            <!-- The three fact columns cascade in left→right (group stagger):
+                 short single row, so triggering on the group's top lands them
+                 in view together. -->
+            <dl
+              class="intro__facts"
+              data-reveal-stagger
+              data-reveal-duration="1.3"
+              data-reveal-gap="0.32"
+            >
+              <div class="intro__fact" data-reveal>
                 <dt>Based in</dt>
                 <dd>Aalborg, Denmark — clients anywhere.</dd>
               </div>
-              <div class="intro__fact">
+              <div class="intro__fact" data-reveal>
                 <dt>What I make</dt>
                 <dd>Websites, plus documents &amp; decks (PDF, PowerPoint).</dd>
               </div>
-              <div class="intro__fact">
+              <div class="intro__fact" data-reveal>
                 <dt>Built with</dt>
                 <dd>HTML, CSS, JavaScript, GSAP &amp; Three.js. No templates.</dd>
               </div>

@@ -28,6 +28,14 @@ html:not(.is-ready) [data-reveal] {
   transform: none;
 }
 
+/* Wipe reveal (left→right via clip-path) — used on the Studio support copy.
+   Clipped from the right only when motion is allowed + JS has booted; the full
+   text shows otherwise. JS opens the clip on scroll (see initWipeReveals). */
+html.is-ready [data-reveal-wipe] {
+  -webkit-clip-path: inset(0% 100% 0% 0%);
+  clip-path: inset(0% 100% 0% 0%);
+}
+
 /* ==========================================================================
    Site header
    ========================================================================== */
