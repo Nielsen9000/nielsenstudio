@@ -873,6 +873,41 @@ html.is-ready .brand-dot {
   max-width: 54ch;
 }
 
+/* Two-column case header: the existing prose on the left, a compact meta list
+   on the right that balances the otherwise-empty space beside the title. Drops
+   to a single stacked column on mobile so nothing gets crushed. */
+.case__head--split {
+  max-width: none;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(15rem, 20rem);
+  gap: var(--space-2xl);
+  align-items: start;
+}
+
+.case__head-main {
+  max-width: 60ch; /* keep the headline + summary on a comfortable measure */
+}
+
+/* Meta list reuses the .facts rows; only the labels switch to the case accent
+   (cyan in NAS via the scoped --accent), values stay normal text. */
+.case__meta {
+  margin: 0;
+}
+
+.case__meta .fact dt {
+  color: var(--accent);
+}
+
+@media (max-width: 48rem) {
+  .case__head--split {
+    grid-template-columns: 1fr;
+    gap: var(--space-l);
+  }
+  .case__head-main {
+    max-width: none;
+  }
+}
+
 /* NAS brand cyan — deliberately scoped to the NAS case only, a nod to the
    client's own accent (#3BB6E8 from their documents). Overriding --accent here
    means everything inside the case that reads the variable — the Case index,
