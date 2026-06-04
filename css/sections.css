@@ -852,6 +852,15 @@ html.is-ready .brand-dot {
   color: var(--nas-cyan);
 }
 
+/* Royal Nectar brand gold — same scoped-accent treatment as the NAS case,
+   using the client's own gold from their site. Overriding --accent here means
+   the Case index, the "Nectar" keyword, the part-label and the status dot all
+   inherit gold, while NAS stays cyan and the rest of the site stays orange. */
+.case--royal {
+  --accent: #C8860A;       /* Royal Nectar primary gold              */
+  --accent-hover: #E7A829; /* their lighter gold, for hover/active   */
+}
+
 /* Scope tags — mono pills. The two document tags carry the single accent in
    this section, signalling the differentiator (print, not just web). */
 .case__scope {
