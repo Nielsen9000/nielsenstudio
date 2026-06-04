@@ -1364,15 +1364,34 @@ html.is-ready .brand-dot {
   width: 9px;
   height: 9px;
   border-radius: 50%;
-  background-color: var(--line-strong);
+  background-color: var(--accent); /* case accent — cyan (NAS) / gold (Royal) */
+}
+
+/* Tonal "traffic light" in the single accent hue — stepped opacity so it still
+   reads as browser chrome rather than three identical accent dots. */
+.browser__dot:nth-child(2) {
+  opacity: 0.55;
+}
+.browser__dot:nth-child(3) {
+  opacity: 0.3;
 }
 
 .browser__url {
   margin-left: var(--space-s);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
   font-family: var(--font-mono);
   font-size: var(--step--1);
   color: var(--text-muted);
   letter-spacing: 0.02em;
+}
+
+/* Discreet, neutral security padlock — inherits the muted URL colour (never the
+   accent), so it reads like a real browser's lock glyph. */
+.browser__lock {
+  flex: none;
+  opacity: 0.75;
 }
 
 /* The viewport is also a .media (placeholder-capable) but the frame supplies
