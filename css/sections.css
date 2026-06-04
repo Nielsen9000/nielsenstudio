@@ -1208,6 +1208,73 @@ html.is-ready .brand-dot {
   border-radius: 0;
 }
 
+/* --- Document cover lightbox ---------------------------------------------
+   JS (lightbox.js) wires each card as a button and reuses one overlay. The
+   zoom-in cursor is added only on JS-wired cards, so non-JS users don't see a
+   misleading affordance. */
+.case__doc-card.is-zoomable {
+  cursor: zoom-in;
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+  display: grid;
+  place-items: center;
+  padding: var(--gutter);
+  background: rgba(13, 13, 15, 0.9);
+  /* Hidden + non-interactive until opened; visibility keeps it out of the tab
+     order while closed, and transitions with the fade. */
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity var(--dur-fast) var(--ease-out),
+    visibility var(--dur-fast) var(--ease-out);
+}
+
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.lightbox__img {
+  max-width: min(90vw, 880px);
+  max-height: 88vh;
+  object-fit: contain;
+  border-radius: var(--radius);
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 0, 0.7);
+  transform: scale(0.97);
+  transition: transform var(--dur-base) var(--ease-out);
+}
+
+.lightbox.is-open .lightbox__img {
+  transform: scale(1);
+}
+
+.lightbox__close {
+  position: absolute;
+  top: var(--space-m);
+  right: var(--space-m);
+  width: 2.5rem;
+  height: 2.5rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  background: rgba(13, 13, 15, 0.6);
+  color: var(--text);
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: border-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+
+.lightbox__close:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
 /* A4 portrait covers (Company Profile + datasheet); the deck stays .media--wide. */
 .media--doc {
   aspect-ratio: 210 / 297;

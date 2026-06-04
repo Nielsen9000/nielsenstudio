@@ -11,6 +11,7 @@ import { initMagnetic } from "./magnetic.js";
 import { initContact } from "./contact.js";
 import { initMediaFallback, initBackgroundVideos } from "./media.js";
 import { initNav, initHeader } from "./nav.js";
+import { initLightbox } from "./lightbox.js";
 
 /* Single source of truth for "may we animate?".
    Read live so a user toggling the OS setting is respected on next load.     */
@@ -32,6 +33,7 @@ function boot() {
      its dependency (GSAP / Three.js) failed to load from the CDN.            */
   initMediaFallback(); // independent of motion — always run
   initBackgroundVideos(); // play hero/intro loops when they scroll into view
+  initLightbox(); // click a document cover to enlarge it (motion-independent)
   initNav(); // scroll-spy: highlight the current section's nav link
   initHeader(); // frosted-glass header once the page scrolls past the top
   initAnimations({ reducedMotion: prefersReducedMotion });
