@@ -97,10 +97,12 @@
         />
       </div>
 
-      <!-- Smoke loop behind the (transparent) 3D canvas. Poster + the canvas's
-           own fallback image cover the reduced-motion / mobile / no-WebGL paths,
-           where the video is hidden. A gentle overlay sits between video and
-           canvas so the object's orange rim stays clearest, smoke still visible. -->
+      <!-- Smoke loop behind the (transparent) 3D canvas. No poster: an unplayed
+           video would paint it as a static image before the first frame (worst on
+           first/slow loads), so the hero just shows the dark --bg until the smoke
+           fades in. The canvas's own fallback image covers the reduced-motion /
+           mobile / no-WebGL paths, where the video is hidden. A gentle overlay sits
+           between video and canvas so the object's orange rim stays clearest. -->
       <div class="hero__bg" aria-hidden="true">
         <video
           class="hero__bg-video"
@@ -110,7 +112,6 @@
           loop
           playsinline
           preload="none"
-          poster="/assets/img/hero/hero-fallback.jpg"
         >
           <source src="/assets/video/hero-bg.webm" type="video/webm" />
           <source src="/assets/video/hero-bg.mp4" type="video/mp4" />
