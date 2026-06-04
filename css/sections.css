@@ -816,6 +816,42 @@ html.is-ready .brand-dot {
   margin-top: var(--space-3xl);
 }
 
+/* Relative so the vertical meta-marker can anchor to the case's side margin. */
+.case {
+  position: relative;
+}
+
+/* Vertical meta-marker living in the case's empty left margin. It reads the
+   case's own scoped --accent, so NAS shows cyan and Royal Nectar gold with no
+   per-case colour here. Decorative (aria-hidden) and never blocks interaction.
+   transform-origin: center + translate(-50%, -50%) pins the label's centre to
+   (left, top) regardless of its length, so rotation stays balanced. */
+.case__marker {
+  position: absolute;
+  top: 50%;
+  left: 1.5rem;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  transform-origin: center;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.3em;
+  color: var(--accent);
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* The side margin only opens up once the viewport is wider than the 72rem
+   content band; below that the marker would sit on top of the text, so drop
+   it entirely. */
+@media (max-width: 78rem) {
+  .case__marker {
+    display: none;
+  }
+}
+
 .case__head {
   max-width: 60ch;
   margin-bottom: var(--space-xl);
