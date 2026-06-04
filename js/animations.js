@@ -31,6 +31,26 @@ export function initAnimations({ reducedMotion }) {
 
   initHeroIntro(gsap);
   revealOnScroll(gsap);
+  initBrandDot(gsap);
+}
+
+/**
+ * The wordmark's accent period pops in just after the brand settles — a small
+ * "landing" detail, not a permanent effect. The brand text itself fades/rises
+ * via the header reveal stagger; this only adds the dot's overshoot. CSS hides
+ * the dot (html.is-ready .brand-dot) until this tween reveals it.
+ */
+function initBrandDot(gsap) {
+  const dot = document.querySelector(".brand-dot");
+  if (!dot) return;
+
+  gsap.to(dot, {
+    opacity: 1,
+    scale: 1,
+    duration: 0.45,
+    ease: "back.out(3)", // small overshoot — the dot lands and settles
+    delay: 0.95, // after the wordmark has revealed in the header stagger
+  });
 }
 
 /* The intro background used to run a scrub-driven parallax, but the smoke video

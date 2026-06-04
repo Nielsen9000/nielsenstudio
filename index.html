@@ -21,10 +21,12 @@
   <meta property="og:image" content="/assets/img/og/og-default.png" />
   <meta name="theme-color" content="#0d0d0f" />
 
-  <!-- Favicons (files dropped into /assets/favicon — see assets/ASSETS.md) -->
-  <link rel="icon" href="/assets/favicon/favicon.svg" type="image/svg+xml" />
-  <link rel="icon" href="/assets/favicon/favicon.ico" sizes="any" />
-  <link rel="apple-touch-icon" href="/assets/favicon/apple-touch-icon.png" />
+  <!-- Favicons — serif N monogram (files in /assets). SVG first for modern
+       browsers; PNGs as fallback; 180px for the iOS home-screen icon. -->
+  <link rel="icon" href="/assets/logo-monogram.svg" type="image/svg+xml" />
+  <link rel="icon" href="/assets/favicon-32.png" sizes="32x32" type="image/png" />
+  <link rel="icon" href="/assets/favicon-512.png" sizes="512x512" type="image/png" />
+  <link rel="apple-touch-icon" href="/assets/favicon-180.png" />
 
   <!-- Self-hosted fonts: preload the two we paint immediately (no FOIT flash).
        woff2 only; see /fonts/FONTS.md. -->
@@ -64,7 +66,7 @@
 
   <header class="site-header" data-reveal-stagger>
     <a class="site-header__brand" href="#top" aria-label="Nielsen Studio — home" data-reveal>
-      Nielsen Studio
+      Nielsen Studio<span class="brand-dot">.</span>
     </a>
     <nav class="site-nav" aria-label="Primary">
       <a class="site-nav__link" href="#work" data-num="03" data-reveal>Work</a>

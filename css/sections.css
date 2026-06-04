@@ -93,6 +93,20 @@ html:not(.is-ready) [data-reveal] {
   color: var(--text);
 }
 
+/* Accent period after the wordmark — a small brand mark in the orange accent.
+   inline-block so the intro can scale it (see initBrandDot in animations.js). */
+.brand-dot {
+  color: var(--accent);
+  display: inline-block;
+}
+
+/* Hidden until the JS intro pops it in — motion only; visible by default so
+   reduced-motion / no-JS keep the full "Nielsen Studio." */
+html.is-ready .brand-dot {
+  opacity: 0;
+  transform: scale(0);
+}
+
 .site-nav {
   position: relative;
   z-index: 1; /* above the glow */
