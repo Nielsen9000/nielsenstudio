@@ -69,9 +69,9 @@
       Nielsen Studio<span class="brand-dot">.</span>
     </a>
     <nav class="site-nav" aria-label="Primary">
-      <a class="site-nav__link" href="#work" data-num="03" data-reveal>Work</a>
-      <a class="site-nav__link" href="#services" data-num="04" data-reveal>Services</a>
-      <a class="site-nav__link" href="#about" data-num="05" data-reveal>About</a>
+      <a class="site-nav__link" href="#work" data-reveal>Work</a>
+      <a class="site-nav__link" href="#services" data-reveal>Services</a>
+      <a class="site-nav__link" href="#about" data-reveal>About</a>
       <span class="site-nav__divider" aria-hidden="true" data-reveal></span>
       <a class="btn btn--ghost" href="#contact" data-magnetic data-reveal>Contact</a>
     </nav>
@@ -637,13 +637,88 @@
     </section>
 
     <!-- ===== 4 · Services ============================================= -->
-    <section class="section" id="services" aria-labelledby="services-head">
+    <!-- Nielsen Studio's own section, so the accent is the GLOBAL burnt orange
+         (var(--accent)) — not a case colour. Three package tiers that build up
+         A → B → C; package C is the complete system and is quietly brought
+         forward (subtle orange edge + "MOST COMPLETE" badge + a small lift). -->
+    <section class="section services" id="services" aria-labelledby="services-head">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow"><span class="eyebrow__index">04</span> / Services</p>
-          <h2 id="services-head" data-reveal>Web design &amp; <span class="accent">documents.</span></h2>
+        <div class="section-head" data-reveal-stagger>
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow__index">04</span> / Services
+          </p>
+          <h2 id="services-head" data-reveal>Packages &amp; <span class="accent">pricing.</span></h2>
+          <!-- Wipe-in lead, same motif as the Work/Studio lead lines. -->
+          <p class="section-lead" data-reveal-wipe>
+            Three tiers — from a single website to one connected brand system.
+            Prices are starting points.
+          </p>
         </div>
-        <!-- Dual-offering zig-zag built in the services step. -->
+
+        <!-- Three tiers in a grid (stacks to one column on mobile). The cards
+             cascade in via the shared stagger; each card is a [data-reveal]. -->
+        <ul class="pricing" role="list" data-reveal-stagger>
+          <!-- A · Website ------------------------------------------------- -->
+          <li class="pricing__card" data-reveal>
+            <p class="pricing__index">
+              <span class="pricing__letter">A</span> <span aria-hidden="true">/</span> 01
+            </p>
+            <h3 class="pricing__name">Website</h3>
+            <p class="pricing__price">
+              from <span class="pricing__amount">25,000</span> kr
+            </p>
+            <ul class="pricing__features" role="list">
+              <li>Custom design &amp; hand-coded development</li>
+              <li>Animations (GSAP / three.js)</li>
+              <li>Responsive, mobile-optimized</li>
+              <li>Hosted, deployed and live</li>
+            </ul>
+            <a class="pricing__cta" href="#contact">
+              Get in touch <span aria-hidden="true">→</span>
+            </a>
+          </li>
+
+          <!-- B · Website + brand collateral ------------------------------ -->
+          <li class="pricing__card" data-reveal>
+            <p class="pricing__index">
+              <span class="pricing__letter">B</span> <span aria-hidden="true">/</span> 02
+            </p>
+            <h3 class="pricing__name">Website + brand collateral</h3>
+            <p class="pricing__price">
+              from <span class="pricing__amount">35,000</span> kr
+            </p>
+            <ul class="pricing__features" role="list">
+              <li>Everything in Website</li>
+              <li>Company profile / PDF documents</li>
+              <li>Datasheets in the same design language</li>
+              <li>Screen-to-print consistency</li>
+            </ul>
+            <a class="pricing__cta" href="#contact">
+              Get in touch <span aria-hidden="true">→</span>
+            </a>
+          </li>
+
+          <!-- C · The full system — primary / most complete --------------- -->
+          <li class="pricing__card pricing__card--featured" data-reveal>
+            <p class="pricing__badge">Most complete</p>
+            <p class="pricing__index">
+              <span class="pricing__letter">C</span> <span aria-hidden="true">/</span> 03
+            </p>
+            <h3 class="pricing__name">The full system</h3>
+            <p class="pricing__price">
+              from <span class="pricing__amount">45,000</span> kr
+            </p>
+            <ul class="pricing__features" role="list">
+              <li>Everything in package B</li>
+              <li>Pitch deck / presentation</li>
+              <li>Complete brand system: web, print, presentation</li>
+              <li>One coherent visual language</li>
+            </ul>
+            <a class="pricing__cta" href="#contact">
+              Get in touch <span aria-hidden="true">→</span>
+            </a>
+          </li>
+        </ul>
       </div>
     </section>
 

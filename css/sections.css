@@ -127,18 +127,14 @@ html.is-ready .brand-dot {
   position: relative;
   font-family: var(--font-mono);
   font-size: var(--step--1);
+  font-weight: var(--weight-medium);
   letter-spacing: var(--tracking-label);
   text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-/* Accent number prefix that echoes the section eyebrows ("03 / Work"): the
-   value is the real section number, supplied per link via data-num. */
-.site-nav__link::before {
-  content: attr(data-num);
-  margin-right: 0.4em;
-  color: var(--accent);
-  font-size: 0.85em;
+  /* Was --text-muted, which read too faint over the dark hero; the off-white
+     --text (plus a slightly heavier weight) makes the links clearly legible
+     while accent hover/active still stand out. */
+  color: var(--text);
+  transition: color var(--dur-fast) var(--ease-out);
 }
 
 /* Accent underline that grows from the left on hover and stays for the current
@@ -1399,6 +1395,206 @@ html.is-ready .brand-dot {
 .browser__viewport {
   aspect-ratio: 16 / 9;
   border-radius: 0;
+}
+
+/* ==========================================================================
+   Services — package tiers (04)
+   Three pricing cards (A · B · C) in a grid that stacks to one column on
+   mobile. This is Nielsen Studio's own section, so the accent stays the global
+   burnt orange (var(--accent)) — never a case colour. Cards earn their surface
+   here (a genuine card layout); kept quiet with hairline borders and the same
+   mono labels / Fraunces headings as the rest of the site. Pakke C is brought
+   gently forward: a subtle orange edge, a badge, and a small lift on desktop.
+   ========================================================================== */
+
+/* Tighten the section's vertical air so a whole card (name → price → all
+   bullets → CTA) fits on one screen alongside the heading, keeping the three
+   tiers comparable at a glance. One step down the spacing scale each — top air
+   and the head's lower gap — so nothing feels cramped.
+
+   Top padding reserves the fixed header's height plus a full --space-xl of
+   clearance (same --header-h technique as .hero). --header-h slightly
+   under-reads the rendered bar, so header-h + space-m was too tight and the
+   label bled through the glass; header-h + space-xl lands the heading clearly
+   below the bar with air to spare — in the same band as the Studio/Work/About
+   sections that already clear it. Bottom keeps the tightened rhythm. */
+.services.section {
+  /* The top padding reserves the fixed header's height + --space-l of air, so an
+     anchor jump to #services clears the bar on its own while landing the heading
+     a bit higher in the viewport (so the card CTAs stay on the fold). No extra
+     scroll-margin-top — that pushed the landing too far down. Bottom keeps the
+     tightened rhythm. */
+  padding-block: calc(var(--header-h) + var(--space-l)) var(--space-2xl);
+}
+
+.services .section-head {
+  margin-bottom: var(--space-m);
+  gap: var(--space-xs); /* tighter than the default --space-s, to recover fold */
+}
+
+.pricing {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile-first: one column, cards stacked */
+  gap: var(--space-m);
+  align-items: start; /* so the featured card's lift doesn't stretch siblings */
+}
+
+/* Three across once there's room; below that they stack. */
+@media (min-width: 58rem) {
+  .pricing {
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-s);
+  }
+}
+
+.pricing__card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* Vertical padding tightened (--space-m → --space-s) so the full card fits on
+     one screen; horizontal stays --space-m, keeping the card's width feel and
+     the badge's inset alignment unchanged. */
+  padding: var(--space-s) var(--space-m);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-lg);
+  transition:
+    border-color var(--dur-base) var(--ease-out),
+    box-shadow var(--dur-base) var(--ease-out);
+}
+
+.pricing__card:hover {
+  border-color: var(--line-strong);
+}
+
+/* Pakke C — the complete system. Subtle orange edge + faint inner wash so it
+   reads as primary without shouting; a small lift on desktop (via margin, not
+   transform, which the reveal tween animates and would otherwise clear). */
+.pricing__card--featured {
+  border-color: var(--accent);
+  background-image: linear-gradient(
+    to bottom,
+    var(--accent-soft),
+    transparent 40%
+  );
+  box-shadow: var(--shadow-soft);
+}
+
+.pricing__card--featured:hover {
+  border-color: var(--accent-hover);
+}
+
+@media (min-width: 58rem) {
+  .pricing__card--featured {
+    margin-top: calc(var(--space-m) * -1); /* gentle lift above its siblings */
+  }
+}
+
+/* "MOST COMPLETE" badge — a small mono pill straddling the top edge. */
+.pricing__badge {
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-end: var(--space-m); /* aligns with the card's inner padding */
+  transform: translateY(-50%);
+  padding: var(--space-3xs) var(--space-2xs);
+  background-color: var(--accent);
+  color: var(--bg);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: var(--weight-medium);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  border-radius: var(--radius);
+  line-height: 1;
+}
+
+/* Package index — mono label, matching the eyebrow / fact-dt voice. */
+.pricing__index {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.pricing__letter {
+  color: var(--accent);
+}
+
+.pricing__name {
+  margin-top: var(--space-s);
+  font-size: var(--step-2); /* matches h3 */
+  line-height: var(--leading-snug);
+}
+
+.pricing__price {
+  margin-top: var(--space-2xs);
+  font-size: var(--step-0);
+  color: var(--text-muted);
+}
+
+.pricing__amount {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  font-weight: var(--weight-medium);
+  color: var(--text);
+  letter-spacing: var(--tracking-tight);
+}
+
+/* Feature list — each line prefixed with a mono "+" in accent, echoing the
+   additive A → B → C build-up. Hairline top rule separates it from the price. */
+.pricing__features {
+  margin-top: var(--space-2xs);
+  padding-top: var(--space-2xs);
+  border-top: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3xs);
+}
+
+.pricing__features li {
+  position: relative;
+  padding-left: var(--space-m);
+  font-size: var(--step-0);
+  line-height: var(--leading-normal);
+  color: var(--text);
+}
+
+.pricing__features li::before {
+  content: "+";
+  position: absolute;
+  left: 0;
+  font-family: var(--font-mono);
+  color: var(--accent);
+}
+
+/* CTA — reuses the case live-link motif: mono accent label, arrow nudges on
+   hover. margin-top:auto pins it to the card foot so the cards align. */
+.pricing__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: var(--space-s);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.pricing__cta span {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.pricing__cta:hover {
+  color: var(--accent-hover);
+}
+
+.pricing__cta:hover span {
+  transform: translateX(4px);
 }
 
 /* ==========================================================================
