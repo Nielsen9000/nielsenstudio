@@ -1,7 +1,7 @@
 # Nielsen Studio
 
 Portfolio site for **Nielsen Studio** — freelance web design by Simon Nielsen,
-Aalborg, Denmark. `nielsens.studio`.
+Aalborg, Denmark. `nielsen.studio`.
 
 Built deliberately in **vanilla HTML / CSS / JS + GSAP**, with **Three.js** for
 one interactive hero material. No framework, no build step — the site is itself a

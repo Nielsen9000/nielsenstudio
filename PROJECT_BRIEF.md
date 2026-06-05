@@ -9,7 +9,7 @@
 ## 0. Kickoff instruction (read first)
 
 You are helping build the portfolio website for **Nielsen Studio** — a freelance web
-design studio run by Simon Nielsen (Aalborg, Denmark). Domain: `nielsens.studio`.
+design studio run by Simon Nielsen (Aalborg, Denmark). Domain: `nielsen.studio`.
 
 Before doing anything:
 1. Read this whole brief.
