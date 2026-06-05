@@ -22,9 +22,12 @@ export async function initHero3D({ reducedMotion }) {
 
   const isSmallScreen = window.matchMedia("(max-width: 48rem)").matches;
 
-  // Decide the cheap fallbacks FIRST — before importing Three at all. Phones,
-  // reduced-motion users and no-WebGL devices never download the 3D library.
-  if (reducedMotion || isSmallScreen || !hasWebGL()) {
+  // Decide the cheap fallbacks FIRST — before importing Three at all.
+  // Reduced-motion and no-WebGL devices never download the 3D library. Mobile
+  // DOES render the object now — but drag is disabled there (see startScene) so
+  // it can't hijack the page scroll; the DPR is capped and the loop pauses
+  // off-screen, so the cost stays bounded.
+  if (reducedMotion || !hasWebGL()) {
     mount.setAttribute("data-fallback", "");
     return;
   }
@@ -46,7 +49,14 @@ export async function initHero3D({ reducedMotion }) {
     return;
   }
 
-  startScene(mount, THREE, OrbitControls, RoomEnvironment);
+  // Wrap the build so any runtime error during scene setup degrades to the
+  // static image rather than leaving a blank canvas.
+  try {
+    startScene(mount, THREE, OrbitControls, RoomEnvironment, isSmallScreen);
+  } catch (err) {
+    console.warn("Hero 3D failed to start — using static fallback.", err);
+    mount.setAttribute("data-fallback", "");
+  }
 }
 
 /** Cheap WebGL capability probe — avoids mounting a broken canvas. */
@@ -69,7 +79,7 @@ function hasWebGL() {
  * listeners it registers and the IntersectionObserver that pauses the loop
  * when the hero scrolls out of view.
  */
-function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
+function startScene(mount, THREE, OrbitControls, RoomEnvironment, isSmallScreen) {
   // Palette pulled live from CSS tokens so JS and CSS never drift.
   const css = getComputedStyle(document.documentElement);
   const COLOR_BG = new THREE.Color(read(css, "--bg", "#0d0d0f"));
@@ -195,6 +205,16 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
   controls.enablePan = false;
   controls.rotateSpeed = 0.6;
 
+  // On phones the hero is full-screen, so a one-finger drag must SCROLL the page,
+  // not rotate the object. OrbitControls sets touch-action:none on the canvas and
+  // grabs touches; disable it here and restore vertical panning so swipes scroll.
+  // The object still auto-spins + tilts on parallax, and the drag hint is already
+  // hidden on mobile, so nothing's lost.
+  if (isSmallScreen) {
+    controls.enabled = false;
+    renderer.domElement.style.touchAction = "pan-y";
+  }
+
   // Pause the idle spin only while the user is actively dragging.
   let userInteracting = false;
   controls.addEventListener("start", () => (userInteracting = true));
@@ -287,6 +307,21 @@ function startScene(mount, THREE, OrbitControls, RoomEnvironment) {
 
   // Mark ready so CSS can fade the canvas in over the content reveal.
   mount.setAttribute("data-ready", "");
+
+  // Runtime safety net (important on mobile): GPUs can drop the WebGL context
+  // under memory pressure. If that happens, stop the loop, hide the dead canvas,
+  // and reveal the static fallback image — so the hero never goes blank.
+  renderer.domElement.addEventListener(
+    "webglcontextlost",
+    (event) => {
+      event.preventDefault();
+      pause();
+      renderer.domElement.style.display = "none";
+      mount.removeAttribute("data-ready"); // un-hide the fallback image…
+      mount.setAttribute("data-fallback", ""); // …and show it
+    },
+    { once: true }
+  );
 
   // --- Teardown ----------------------------------------------------------
   // Not auto-called (the hero lives for the page's life), but exposed so a

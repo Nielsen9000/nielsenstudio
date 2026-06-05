@@ -820,13 +820,15 @@
           </p>
           <h2 id="contact-head" data-reveal>Let's build <span class="accent">something.</span></h2>
           <p class="section-lead" data-reveal-wipe>
-            Available for new projects. Tell me what you're making — I'll get back to you.
+            Available for new projects. Drop me a line — I read every email.
           </p>
         </div>
 
-        <div class="contact__grid">
+        <div class="contact__grid contact__grid--direct">
+          <!-- Form hidden until Resend is configured — see api/contact.js -->
+          <!-- To restore: remove "is-hidden" below and "contact__grid--direct" above. -->
           <!-- ---- Form (left) ---------------------------------------------- -->
-          <form class="contact__form" data-contact-form data-reveal-stagger novalidate>
+          <form class="contact__form is-hidden" data-contact-form data-reveal-stagger novalidate>
             <!-- Honeypot: visually hidden + out of tab order. A real user never
                  fills this; a bot that does gets a silent fake-success. -->
             <div class="visually-hidden" aria-hidden="true">
@@ -914,19 +916,6 @@
             <div class="contact__detail" data-reveal>
               <p class="contact__detail-label">Location</p>
               <p class="contact__detail-value">Aalborg, Denmark</p>
-            </div>
-
-            <!-- Structure ready; drop real URLs into the href attributes. -->
-            <div class="contact__detail" data-reveal>
-              <p class="contact__detail-label">Elsewhere</p>
-              <ul class="contact__links" role="list">
-                <li>
-                  <a class="contact__link" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
-                </li>
-                <li>
-                  <a class="contact__link" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-                </li>
-              </ul>
             </div>
           </aside>
         </div>

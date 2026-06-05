@@ -251,18 +251,10 @@ html.is-ready .brand-dot {
 
 /* Mobile: single column — the live canvas no-ops here, so the fallback image
    fills the hero full-bleed again behind the full-width text. */
-@media (max-width: 48rem) {
-  .hero {
-    grid-template-columns: 1fr;
-  }
-  .hero__canvas {
-    inset: 0;
-  }
-  .hero__content {
-    max-width: none;
-    padding-inline: var(--gutter);
-  }
-}
+/* Mobile hero layout overrides live at the END of the hero block (after the
+   base .hero__canvas / .hero__content rules) so they win on source order.
+   Placed here — above those bases — they were silently overridden, which left
+   the desktop split on phones. See the @media (max-width: 48rem) below .hero__tech. */
 
 /* --- Smoke background loop ------------------------------------------------
    Sits at the very bottom of the hero. The transparent 3D canvas renders the
@@ -480,6 +472,23 @@ html.is-ready .brand-dot {
 }
 
 @media (max-width: 48rem) {
+  /* Single column; the object fills the hero full-bleed behind the copy, which
+     spans the gutter. These MUST come after the base .hero__canvas /
+     .hero__content rules above — equal specificity, so source order wins. With
+     the overrides up near .hero (before those bases) they were dead, leaving the
+     desktop left:32% split + 44rem copy on phones: a hard vertical seam across
+     the object and an overflowing headline. */
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .hero__canvas {
+    inset: 0;
+  }
+  .hero__content {
+    max-width: none;
+    padding-inline: var(--gutter);
+  }
+
   /* On phones the fallback image carries the hero; drop the hint + signature. */
   .hero__hint,
   .hero__tech {
@@ -792,6 +801,12 @@ html.is-ready .brand-dot {
   );
   margin-top: -4vh;   /* gentle — just enough to layer over the smoke, not swallow it */
   padding-top: 14vh;  /* pushes the Work content back down, clear of the seam */
+  /* Bottom pulled tighter than the other studio sections on purpose: the Work
+     section ends in the case's media IMAGE (not text), so a hard image edge
+     earns a shorter gap into Services than the text→text transitions elsewhere.
+     --space-xl brings Work→Services to ~187px (vs ~228 for the rest). Top +
+     margin unchanged (smoke overlap intact). */
+  padding-bottom: var(--space-xl);
 }
 
 /* The work heading is the one centred block — a calm "now, the work" moment
@@ -1611,6 +1626,10 @@ html.is-ready .brand-dot {
    var(--line) via a ::before, so it adds no layout (no box shift). */
 .about.section {
   position: relative;
+  /* Match the other studio sections' rhythm (Services/Contact) instead of the
+     default --space-3xl on both sides, which left About floating with more air
+     than its neighbours. Header-cleared top also lands #about cleanly. */
+  padding-block: calc(var(--header-h) + var(--space-l)) var(--space-2xl);
 }
 
 .about.section::before {
@@ -1751,11 +1770,58 @@ html.is-ready .brand-dot {
   padding-block: calc(var(--header-h) + var(--space-l)) var(--space-2xl);
 }
 
+/* Tighten the heading→form gap to match Services (the base .section-head's
+   --space-xl was looser than the rest, and .contact__grid's own margin-top
+   stacked on top of it — redundant). Centred for the current direct-contact
+   layout (form hidden pre-Resend); when the form returns, drop the centring. */
+.contact .section-head {
+  margin-bottom: var(--space-m);
+  align-items: center;
+  text-align: center;
+  margin-inline: auto;
+}
+
 .contact__grid {
   display: grid;
   grid-template-columns: 1fr; /* mobile-first: stacked */
   gap: var(--space-xl);
-  margin-top: var(--space-l); /* air from the section-head */
+}
+
+/* Form hidden until Resend is configured (see api/contact.js). Code stays intact;
+   remove this class from the <form> to bring it back. Scoped specificity (0,2,0)
+   so it beats .contact__form's display:flex without !important. */
+.contact__form.is-hidden {
+  display: none;
+}
+
+/* Direct-contact layout — used WHILE the form is hidden. One calm centred column
+   built around the email CTA, so the section never looks empty without the form.
+   Restore by removing --direct here and .is-hidden on the form. */
+.contact__grid--direct {
+  display: block; /* override the two-column grid */
+  max-width: 44rem;
+  margin-inline: auto;
+  margin-top: var(--space-l);
+  text-align: center;
+}
+
+.contact__grid--direct .contact__details {
+  align-items: center;
+  gap: var(--space-l);
+}
+
+.contact__grid--direct .contact__detail {
+  align-items: center;
+}
+
+.contact__grid--direct .contact__email-row,
+.contact__grid--direct .contact__links {
+  justify-content: center;
+}
+
+/* The email is the primary action now — make it larger/more prominent. */
+.contact__grid--direct .contact__email {
+  font-size: var(--step-2);
 }
 
 /* Form wider than the details rail once there's room; stacked below 58rem. */
