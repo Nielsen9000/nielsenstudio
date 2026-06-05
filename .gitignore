@@ -12,3 +12,8 @@ Thumbs.db
 # Raw video sources (kept locally; the optimized loops live in assets/video/)
 /hero-bg.mp4
 /studio-bg.mp4
+
+# Environment / secrets (e.g. RESEND_API_KEY) — never commit; set in Vercel
+.env
+.env.*
+!.env.example
