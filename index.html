@@ -732,14 +732,130 @@
       </div>
     </section>
 
-    <!-- ===== 6 · Contact CTA ========================================= -->
-    <section class="section" id="contact" aria-labelledby="contact-head">
+    <!-- ===== 6 · Contact ============================================= -->
+    <!-- Nielsen Studio's own section — global burnt orange accent (no case
+         scope). Two columns on desktop (form left, details right), stacked on
+         mobile at the same 58rem breakpoint as the pricing grid. The form
+         follows the contact.js contract: [data-contact-form], a [data-form-status]
+         live region, native required/validation, and a hidden "company" honeypot. -->
+    <section class="section contact" id="contact" aria-labelledby="contact-head">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow"><span class="eyebrow__index">06</span> / Contact</p>
-          <h2 id="contact-head" data-reveal>Start a <span class="accent">project.</span></h2>
+        <div class="section-head" data-reveal-stagger>
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow__index">06</span> / Contact
+          </p>
+          <h2 id="contact-head" data-reveal>Let's build <span class="accent">something.</span></h2>
+          <p class="section-lead" data-reveal-wipe>
+            Available for new projects. Tell me what you're making — I'll get back to you.
+          </p>
         </div>
-        <!-- Low-friction contact form built in the contact step. -->
+
+        <div class="contact__grid">
+          <!-- ---- Form (left) ---------------------------------------------- -->
+          <form class="contact__form" data-contact-form data-reveal-stagger novalidate>
+            <!-- Honeypot: visually hidden + out of tab order. A real user never
+                 fills this; a bot that does gets a silent fake-success. -->
+            <div class="visually-hidden" aria-hidden="true">
+              <label for="contact-company">Company (leave this blank)</label>
+              <input
+                type="text"
+                id="contact-company"
+                name="company"
+                tabindex="-1"
+                autocomplete="off"
+              />
+            </div>
+
+            <div class="contact__field" data-reveal>
+              <label class="contact__label" for="contact-name">Name</label>
+              <input
+                class="contact__input"
+                type="text"
+                id="contact-name"
+                name="name"
+                autocomplete="name"
+                required
+              />
+            </div>
+
+            <div class="contact__field" data-reveal>
+              <label class="contact__label" for="contact-email">Email</label>
+              <input
+                class="contact__input"
+                type="email"
+                id="contact-email"
+                name="email"
+                autocomplete="email"
+                required
+              />
+            </div>
+
+            <div class="contact__field" data-reveal>
+              <label class="contact__label" for="contact-project">Project type</label>
+              <select class="contact__input contact__select" id="contact-project" name="project">
+                <option value="" disabled selected>Select a package</option>
+                <option value="Website">Website</option>
+                <option value="Website + brand collateral">Website + brand collateral</option>
+                <option value="The full system">The full system</option>
+                <option value="Something else">Something else</option>
+              </select>
+            </div>
+
+            <div class="contact__field" data-reveal>
+              <label class="contact__label" for="contact-message">Message</label>
+              <textarea
+                class="contact__input contact__textarea"
+                id="contact-message"
+                name="message"
+                rows="5"
+                required
+              ></textarea>
+            </div>
+
+            <div class="contact__actions" data-reveal>
+              <button class="contact__submit" type="submit">
+                Send message <span aria-hidden="true">→</span>
+              </button>
+              <p class="contact__status" data-form-status aria-live="polite"></p>
+            </div>
+          </form>
+
+          <!-- ---- Details (right) ------------------------------------------ -->
+          <aside class="contact__details" data-reveal-stagger>
+            <div class="contact__detail" data-reveal>
+              <p class="contact__detail-label">Direct</p>
+              <div class="contact__email-row">
+                <a class="contact__email" href="mailto:hello@nielsen.studio">hello@nielsen.studio</a>
+                <button
+                  class="contact__copy"
+                  type="button"
+                  data-copy="hello@nielsen.studio"
+                  aria-label="Copy email address"
+                >
+                  Copy
+                </button>
+              </div>
+            </div>
+
+            <div class="contact__detail" data-reveal>
+              <p class="contact__detail-label">Location</p>
+              <p class="contact__detail-value">Aalborg, Denmark</p>
+            </div>
+
+            <!-- Structure ready; drop real URLs into the href attributes. -->
+            <div class="contact__detail" data-reveal>
+              <p class="contact__detail-label">Elsewhere</p>
+              <ul class="contact__links" role="list">
+                <li>
+                  <a class="contact__link" href="#" target="_blank" rel="noopener noreferrer">GitHub</a>
+                </li>
+                <li>
+                  <a class="contact__link" href="#" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                </li>
+              </ul>
+            </div>
+          </aside>
+        </div>
       </div>
     </section>
   </main>

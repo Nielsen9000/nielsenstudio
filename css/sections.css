@@ -1598,6 +1598,247 @@ html.is-ready .brand-dot {
 }
 
 /* ==========================================================================
+   Contact — enquiry form + details (06)
+   Two columns on desktop (form left, details right), stacked on mobile at the
+   same 58rem breakpoint as the pricing grid. Nielsen Studio's own section, so
+   the accent is the global burnt orange. Hairline borders, no heavy shadows —
+   the same quiet language as the rest of the site.
+   ========================================================================== */
+
+/* Same header-clearance + bottom rhythm as Services. */
+.contact.section {
+  padding-block: calc(var(--header-h) + var(--space-l)) var(--space-2xl);
+}
+
+.contact__grid {
+  display: grid;
+  grid-template-columns: 1fr; /* mobile-first: stacked */
+  gap: var(--space-xl);
+  margin-top: var(--space-l); /* air from the section-head */
+}
+
+/* Form wider than the details rail once there's room; stacked below 58rem. */
+@media (min-width: 58rem) {
+  .contact__grid {
+    grid-template-columns: minmax(0, 38rem) 1fr;
+    gap: var(--space-xl);
+    align-items: start;
+  }
+}
+
+/* --- Form --------------------------------------------------------------- */
+.contact__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+}
+
+/* Stack label OVER its field (vs the browser-default inline). */
+.contact__field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+/* Labels in the mono eyebrow voice. */
+.contact__label {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Shared field styling — input / select / textarea. */
+.contact__input,
+.contact__select,
+.contact__textarea {
+  width: 100%;
+  padding: var(--space-xs) var(--space-s);
+  font-family: var(--font-body);
+  font-size: var(--step-0);
+  color: var(--text);
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: border-color var(--dur-fast) var(--ease-out),
+    box-shadow var(--dur-fast) var(--ease-out);
+}
+
+.contact__input::placeholder,
+.contact__textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Keep a visible focus ring (a11y) while dropping the default outline: accent
+   border + a faint accent wash. */
+.contact__input:focus,
+.contact__select:focus,
+.contact__textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+.contact__textarea {
+  resize: vertical;
+  min-height: 8rem;
+  line-height: var(--leading-normal);
+}
+
+/* Select: native dropdown arrow kept; set colours explicitly so the control and
+   its options never render dark-on-dark. */
+.contact__select {
+  cursor: pointer;
+}
+
+.contact__select option {
+  color: var(--text);
+  background-color: var(--surface);
+}
+
+/* --- Submit (the pricing__cta text-CTA motif, not a boxed button) ------- */
+.contact__actions {
+  margin-top: var(--space-xs);
+}
+
+.contact__submit {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2xs);
+  align-self: flex-start;
+  /* Light button affordance — border + padding so the only submit control reads
+     as a button, but no filled orange box in idle (border + text only). */
+  padding: var(--space-xs) var(--space-m);
+  background: none;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: color var(--dur-fast) var(--ease-out),
+    background-color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.contact__submit span {
+  transition: transform var(--dur-fast) var(--ease-out);
+}
+
+.contact__submit:hover {
+  background-color: var(--accent-soft);
+  color: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+.contact__submit:hover span {
+  transform: translateX(4px);
+}
+
+/* In-flight: dim + inert while the request is sending. */
+[data-contact-form][data-state="loading"] .contact__submit {
+  opacity: 0.5;
+  pointer-events: none;
+}
+
+.contact__status {
+  margin-top: var(--space-2xs);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  color: var(--text-muted);
+}
+
+/* --- Details rail ------------------------------------------------------- */
+.contact__details {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+  align-self: start; /* flush with the form's top */
+}
+
+.contact__detail {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2xs);
+}
+
+.contact__detail-label {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.contact__detail-value {
+  font-size: var(--step-0);
+  color: var(--text);
+}
+
+.contact__email-row {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+  flex-wrap: wrap;
+}
+
+/* Big, copyable address — Fraunces, accent, lifts on hover. */
+.contact__email {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  color: var(--accent);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.contact__email:hover {
+  color: var(--accent-hover);
+}
+
+/* Small, discreet mono "Copy" button — hairline, not a grey box. */
+.contact__copy {
+  padding: var(--space-3xs) var(--space-2xs);
+  background: none;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--text-muted);
+  transition: color var(--dur-fast) var(--ease-out),
+    border-color var(--dur-fast) var(--ease-out);
+}
+
+.contact__copy:hover,
+.contact__copy.is-copied {
+  color: var(--text);
+  border-color: var(--line-strong);
+}
+
+.contact__links {
+  display: flex;
+  gap: var(--space-m);
+}
+
+.contact__link {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+  color: var(--accent);
+  transition: color var(--dur-fast) var(--ease-out);
+}
+
+.contact__link:hover {
+  color: var(--accent-hover);
+}
+
+/* ==========================================================================
    Site footer
    ========================================================================== */
 
