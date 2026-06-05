@@ -901,11 +901,22 @@
             <div class="contact__detail" data-reveal>
               <p class="contact__detail-label">Direct</p>
               <div class="contact__email-row">
-                <a class="contact__email" href="mailto:hello@nielsen.studio">hello@nielsen.studio</a>
+                <!-- Address obfuscated: the parts live in data-user / data-domain
+                     so the joined address (and the at-sign) never appears in the
+                     HTML source. js/contact.js (initEmail) reassembles it on load for
+                     the visible text, the mailto href, and the copy button. The
+                     no-JS fallback below stays human-readable. -->
+                <a
+                  class="contact__email"
+                  href="#"
+                  data-user="hello"
+                  data-domain="nielsen.studio"
+                  >hello <span aria-hidden="true">[at]</span> nielsen <span aria-hidden="true">[dot]</span> studio</a
+                >
                 <button
                   class="contact__copy"
                   type="button"
-                  data-copy="hello@nielsen.studio"
+                  data-copy-email
                   aria-label="Copy email address"
                 >
                   Copy
@@ -927,7 +938,16 @@
     <div class="container site-footer__inner">
       <span class="site-footer__brand">Nielsen Studio</span>
       <span class="site-footer__meta">
-        Aalborg, Denmark · <a href="mailto:hello@nielsen.studio">hello@nielsen.studio</a>
+        <!-- Same obfuscation as the Contact address — parts in data-* attrs,
+             reassembled by initEmail; human-readable [at]/[dot] fallback. -->
+        Aalborg, Denmark ·
+        <a
+          class="site-footer__email"
+          href="#"
+          data-user="hello"
+          data-domain="nielsen.studio"
+          >hello <span aria-hidden="true">[at]</span> nielsen <span aria-hidden="true">[dot]</span> studio</a
+        >
       </span>
     </div>
   </footer>

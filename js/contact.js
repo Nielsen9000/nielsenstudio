@@ -6,7 +6,7 @@
    ========================================================================== */
 
 export function initContact() {
-  wireCopyButtons(); // independent of the form — runs even if it's absent
+  initEmail(); // reconstruct the obfuscated address — independent of the form
 
   const form = document.querySelector("[data-contact-form]");
   if (!form) return; // contact section not on this page
@@ -78,28 +78,47 @@ function setState(form, status, state) {
 }
 
 /**
- * Wire any [data-copy] button to copy its value to the clipboard and flash a
- * short "Copied" confirmation. Used by the contact details' email address.
+ * Reconstruct the obfuscated email address at runtime. The HTML source carries
+ * only the split parts (data-user / data-domain) plus a human-readable
+ * "hello [at] nielsen [dot] studio" fallback — the full address and "@" never
+ * appear in the markup. On load we assemble it and apply it to all three
+ * touchpoints: visible text, the mailto href, and the copy button's clipboard.
+ * No-JS visitors keep the readable fallback (and can still reach me).
  */
-function wireCopyButtons() {
-  document.querySelectorAll("[data-copy]").forEach((btn) => {
-    btn.addEventListener("click", async () => {
-      const text = btn.getAttribute("data-copy");
-      if (!text || !navigator.clipboard) return;
+function initEmail() {
+  // "@" from a char code so the joined address isn't a literal anywhere.
+  const join = (el) => el.dataset.user + String.fromCharCode(64) + el.dataset.domain;
 
-      try {
-        await navigator.clipboard.writeText(text);
-        const original = btn.dataset.label ?? btn.textContent.trim();
-        btn.dataset.label = original;
-        btn.textContent = "Copied";
-        btn.classList.add("is-copied");
-        window.setTimeout(() => {
-          btn.textContent = btn.dataset.label;
-          btn.classList.remove("is-copied");
-        }, 1600);
-      } catch {
-        /* clipboard unavailable (e.g. insecure context) — no-op */
-      }
-    });
+  // Reconstruct every obfuscated link (Contact + footer): set the real text and
+  // a working mailto. Links missing parts keep their readable [at]/[dot] fallback.
+  document.querySelectorAll("[data-user][data-domain]").forEach((link) => {
+    const address = join(link);
+    link.textContent = address;
+    link.setAttribute("href", "mailto:" + address);
+  });
+
+  // Copy button (Contact only) → copies the reconstructed Contact address,
+  // rebuilt from its parts rather than read from any attribute holding it whole.
+  const copyBtn = document.querySelector("[data-copy-email]");
+  const emailLink = document.querySelector(".contact__email");
+  if (!copyBtn || !emailLink || !emailLink.dataset.user || !emailLink.dataset.domain) return;
+  const address = join(emailLink);
+
+  copyBtn.addEventListener("click", async () => {
+    if (!navigator.clipboard) return;
+    try {
+      // Copy the reconstructed address — not any attribute holding it.
+      await navigator.clipboard.writeText(address);
+      const original = copyBtn.dataset.label ?? copyBtn.textContent.trim();
+      copyBtn.dataset.label = original;
+      copyBtn.textContent = "Copied";
+      copyBtn.classList.add("is-copied");
+      window.setTimeout(() => {
+        copyBtn.textContent = copyBtn.dataset.label;
+        copyBtn.classList.remove("is-copied");
+      }, 1600);
+    } catch {
+      /* clipboard unavailable (e.g. insecure context) — no-op */
+    }
   });
 }
