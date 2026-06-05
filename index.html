@@ -723,11 +723,85 @@
     </section>
 
     <!-- ===== 5 · About / process ===================================== -->
-    <section class="section" id="about" aria-labelledby="about-head">
+    <!-- Nielsen Studio's own section — global burnt orange accent (no case
+         scope). Follows the STUDIO reveal pattern (not Services): per-element
+         reveals on the heading/copy because it's a tall section, with a single
+         [data-reveal-stagger] group on the short process list. -->
+    <section class="section about" id="about" aria-labelledby="about-head">
       <div class="container">
-        <div class="section-head">
-          <p class="eyebrow"><span class="eyebrow__index">05</span> / About</p>
-          <h2 id="about-head" data-reveal>About &amp; <span class="accent">process.</span></h2>
+        <!-- Opening block — no stagger group (Studio pattern): each element
+             reveals on its own as it scrolls in. -->
+        <div class="about__intro">
+          <p class="eyebrow" data-reveal>
+            <span class="eyebrow__index">05</span> / About
+          </p>
+          <h2 id="about-head" class="about__statement" data-reveal-wipe>
+            You work with <span class="accent">me</span>.
+          </h2>
+          <div class="about__lead">
+            <p data-reveal-wipe>
+              I'm Simon — a designer and developer based in Aalborg. I started
+              Nielsen Studio after working with clients who wanted something more
+              considered than templates.
+            </p>
+            <p data-reveal-wipe>
+              I take on a small number of projects at a time. You work with me,
+              not a team of account managers.
+            </p>
+          </div>
+        </div>
+
+        <!-- Process — the ONE stagger group in this section; each step cascades
+             in (same calm timing as the Studio facts row). -->
+        <div class="about__process">
+          <p class="eyebrow about__process-label" data-reveal>/ How I work</p>
+          <ol
+            class="about__steps"
+            role="list"
+            data-reveal-stagger
+            data-reveal-duration="1.3"
+            data-reveal-gap="0.32"
+          >
+            <li class="about__step" data-reveal>
+              <p class="about__step-num" aria-hidden="true">01</p>
+              <div class="about__step-body">
+                <h3 class="about__step-title">Discovery</h3>
+                <p class="about__step-text">
+                  We talk about what you're making, who it's for, and what the
+                  site needs to do. I listen more than I pitch.
+                </p>
+              </div>
+            </li>
+            <li class="about__step" data-reveal>
+              <p class="about__step-num" aria-hidden="true">02</p>
+              <div class="about__step-body">
+                <h3 class="about__step-title">Design</h3>
+                <p class="about__step-text">
+                  I build the direction in code, not static mockups. You see real
+                  screens early and we iterate.
+                </p>
+              </div>
+            </li>
+            <li class="about__step" data-reveal>
+              <p class="about__step-num" aria-hidden="true">03</p>
+              <div class="about__step-body">
+                <h3 class="about__step-title">Build</h3>
+                <p class="about__step-text">
+                  Hand-coded, no templates. You follow along; I commit in small
+                  steps so nothing is a black box.
+                </p>
+              </div>
+            </li>
+            <li class="about__step" data-reveal>
+              <p class="about__step-num" aria-hidden="true">04</p>
+              <div class="about__step-body">
+                <h3 class="about__step-title">Launch</h3>
+                <p class="about__step-text">
+                  Deployed, live, and handed over. I'm still here afterward.
+                </p>
+              </div>
+            </li>
+          </ol>
         </div>
       </div>
     </section>
