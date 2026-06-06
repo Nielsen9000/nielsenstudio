@@ -1557,6 +1557,14 @@ html.is-ready .brand-dot {
   letter-spacing: var(--tracking-tight);
 }
 
+/* "ex. VAT" qualifier — quiet mono note next to the price. */
+.pricing__vat {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  letter-spacing: var(--tracking-label);
+  text-transform: uppercase;
+}
+
 /* Feature list — each line prefixed with a mono "+" in accent, echoing the
    additive A → B → C build-up. Hairline top rule separates it from the price. */
 .pricing__features {
@@ -1775,6 +1783,12 @@ html.is-ready .brand-dot {
    stacked on top of it — redundant). */
 .contact .section-head {
   margin-bottom: var(--space-m);
+}
+
+/* The Contact invite reads too faint in the default muted lead colour — lift it
+   to the off-white --text so the "get in touch" line is clearly legible. */
+.contact .section-lead {
+  color: var(--text);
 }
 
 .contact__grid {
