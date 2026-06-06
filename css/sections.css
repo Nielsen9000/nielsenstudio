@@ -1772,13 +1772,9 @@ html.is-ready .brand-dot {
 
 /* Tighten the heading→form gap to match Services (the base .section-head's
    --space-xl was looser than the rest, and .contact__grid's own margin-top
-   stacked on top of it — redundant). Centred for the current direct-contact
-   layout (form hidden pre-Resend); when the form returns, drop the centring. */
+   stacked on top of it — redundant). */
 .contact .section-head {
   margin-bottom: var(--space-m);
-  align-items: center;
-  text-align: center;
-  margin-inline: auto;
 }
 
 .contact__grid {

@@ -1,0 +1,5 @@
+{
+  "private": true,
+  "name": "nielsen-studio",
+  "engines": { "node": "20.x" }
+}
